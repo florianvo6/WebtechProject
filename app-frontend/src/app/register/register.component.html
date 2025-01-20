@@ -1,0 +1,17 @@
+<div>
+    <h2>Register</h2>
+    <form (ngSubmit)="register()">
+        <div>
+            <label for="user">Username:</label>
+            <input type="text" id="user" [(ngModel)]="user" name="user" required>
+        </div>
+        <div>
+            <label for="pass">Password:</label>
+            <input type="password" id="pass" [(ngModel)]="pass" name="pass" required>
+        </div>
+        <button type="submit">Register</button>
+    </form>
+    <p>{{ message }}</p>
+    <button (click)="goToLogin()">Go to Login</button>
+</div>
+
