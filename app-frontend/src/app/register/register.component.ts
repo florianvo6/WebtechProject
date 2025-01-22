@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
 })
 export class RegisterComponent {
   user: string = '';
+  mail: string = '';
+  name: string = '';
   pass: string = '';
   message: string = '';
 
