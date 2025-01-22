@@ -1,0 +1,16 @@
+.navbar-logo img {
+    width: 350px; /* Set your desired width */
+    height: auto; /* Maintain aspect ratio */
+  }
+
+.navbar {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  }
+
+.modal-container {
+    background-color: #585d6d89;
+    border-radius: 15px;
+    margin: 25px auto; /* Center the container */
+    width: 1500px; /* Set a max width for the container */
+    text-align: center; /* Center text inside the container */
+}
