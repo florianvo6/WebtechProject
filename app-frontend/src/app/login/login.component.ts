@@ -25,6 +25,7 @@ export class LoginComponent {
           if (response.token) {
             localStorage.setItem('token', response.token); // Store the token
             this.message = 'Login successful.';
+            this.goToHome();
             // this.router.navigate(['/dashboard']); // Redirect to dashboard or home page
           } else {
             this.message = 'Login failed. No token received.';
@@ -39,5 +40,13 @@ export class LoginComponent {
 
   goToRegister() {
     this.router.navigate(['/register']);
+  }
+
+  goToLogin() {
+    this.router.navigate(['/login']);
+  }
+
+  goToHome() {
+    this.router.navigate(['/home']);
   }
 }
