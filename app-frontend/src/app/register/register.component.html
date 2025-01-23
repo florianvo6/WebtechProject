@@ -2,11 +2,15 @@
     <div class="navbar-logo">
       <img src="assets\logo.png" alt="Logo" />
     </div>
+    <div class="navbar-buttons">
+        <a href="#" (click)="goToLogin(); $event.preventDefault();" class="btn btn-light me-3">Login</a>
+        <a href="#" (click)="goToRegister(); $event.preventDefault();" class="btn btn-light me-4">Register</a>
+    </div>
   </nav>
 
 <div class="modal-container">
     <br/>
-    <h2 class="mb-0 mt-4 text-align-center text-white">Create a new account</h2>
+    <h1 class="pb-2 border-bottom text-white">Create a new account</h1>
     
     <div class="modal modal-sheet position-static d-block p-4 py-md-3" tabindex="-1" role="dialog" id="modalSignin">
         <div class="modal-dialog" role="document">
@@ -23,7 +27,7 @@
                 </div>
                 <div class="form-floating mb-3">
                     <input type="email" class="form-control rounded-3" id="floatingInput" placeholder="max.muster@example.com" [(ngModel)]="mail" name="mail" required>
-                    <label for="floatingInput">Password</label>
+                    <label for="floatingInput">E-Mail</label>
                 </div>
                 <div class="form-floating mb-3">
                     <input type="name" class="form-control rounded-3" id="floatingInput" placeholder="Max" [(ngModel)]="name" name="name" required>

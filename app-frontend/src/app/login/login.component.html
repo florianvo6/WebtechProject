@@ -2,11 +2,15 @@
     <div class="navbar-logo">
       <img src="assets\logo.png" alt="Logo" />
     </div>
+    <div class="navbar-buttons">
+      <a href="#" (click)="goToLogin(); $event.preventDefault();" class="btn btn-light me-3">Login</a>
+      <a href="#" (click)="goToRegister(); $event.preventDefault();" class="btn btn-light me-4">Register</a>
+    </div>
   </nav>
 
 <div class="modal-container">
   <br/>
-  <h2 class="mb-0 mt-4 text-align-center text-white">Welcome back! </h2>
+  <h1 class="pb-2 border-bottom text-white">Sign into your account</h1>
     
   <div class="modal modal-sheet position-static d-block p-4 py-md-4" tabindex="-1" role="dialog" id="modalSignin">
       <div class="modal-dialog" role="document">

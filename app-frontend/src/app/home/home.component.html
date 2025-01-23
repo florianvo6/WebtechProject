@@ -1,0 +1,44 @@
+<app-navbar></app-navbar>
+<div class="container modal-container py-5 px-5" id="featured-3">
+    <h1 class="pb-2 border-bottom text-white">Home</h1>
+    <div class="bg-white rounded-3 py-3 px-3 mt-4">
+        <p class="text-start">Explore our <strong>Marketplace</strong> for unbeatable deals on new and pre-owned products, from electronics to furniture. If you're in the market for a home or investment property, head to <strong>Real Estate</strong> to find the perfect place for you. Or, check out <strong>Vehicles</strong> to browse cars, bikes, and more—whether you’re buying or selling, you’ll find it here.</p>
+        <p class="text-start">Ready to discover great deals? Simply click on any category to start your journey. Whether you're looking to buy or sell, we make it easy to connect with people in your local community and beyond. Let’s mingle!</p>
+    </div>
+    <div class="row mt-4 row-cols-1 row-cols-md-3">
+      <div class="feature col">
+        <div (click)="goToMarketplace()" class="bg-white rounded-3 py-3 px-3 hover-effect" style="height: 300px;">
+            <div class="feature-icon d-inline-flex align-items-center justify-content-center fs-2 mb-3">
+                <img src="assets/marketplace.png" alt="Feature Icon" class="img-fluid" style="max-width: auto; height: 100px;">
+            </div>
+            <h3 class="fs-4 text-body-emphasis">Marketplace</h3>
+            <p>Browse a wide variety of products – from gadgets to home goods. Find great deals near you!</p>
+        </div>
+      </div>
+      <div class="feature col">
+        <div (click)="goToRealEstate()" class="bg-white rounded-3 py-3 px-3 hover-effect" style="height: 300px;">
+            <div class="feature-icon d-inline-flex align-items-center justify-content-center fs-2 mb-3">
+                <img src="assets/real-estate.png" alt="Feature Icon" class="img-fluid" style="max-width: auto; height: 100px;">
+            </div>
+            <h3 class="fs-4 text-body-emphasis">Real Estate</h3>
+            <p>Discover your next home or investment property. Explore listings for sale and rent.</p>
+        </div>
+      </div>
+      <div class="feature col">
+        <div (click)="goToVehicles()" class="bg-white rounded-3 py-3 px-3 hover-effect" style="height: 300px;">
+            <div class="feature-icon d-inline-flex align-items-center justify-content-center fs-2 mb-3">
+                <img src="assets/car.png" alt="Feature Icon" class="img-fluid" style="max-width: auto; height: 100px;">
+            </div>
+            <h3 class="fs-4 text-body-emphasis">Vehicles</h3>
+            <p>Find cars, bikes, and more. Whether you’re buying or selling, start your vehicle search here!</p>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="container modal-container py-5 px-5" id="featured-3">
+    <h2 class="pb-2 text-white text-start">Bargain Browser</h2>
+    <div class="bg-white rounded-3 py-3 px-3">
+        <p class="text-start">Discover the best deals with our Bargain Browser! Easily browse through top offers across all categories—whether you're hunting for a great product, an unbeatable property deal, or the perfect vehicle. Don’t miss out on discounts and hidden gems near you!</p>
+    </div>
+</div>
