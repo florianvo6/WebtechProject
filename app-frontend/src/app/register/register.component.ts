@@ -2,10 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AlertComponent } from '../alert/alert.component';
+import { Alert } from '../services/models/alert-type';
+import { AlertService } from '../services/alert-service/alert.service';
+import { response } from 'express';
 
 @Component({
   selector: 'app-register',
-  imports: [FormsModule],
+  imports: [FormsModule, AlertComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
@@ -15,24 +19,28 @@ export class RegisterComponent {
   name: string = '';
   pass: string = '';
   message: string = '';
+  alert: Alert | null = null;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private alertService: AlertService) {}
+  
+  ngOnInit() {
+    this.alertService.clear();
+  }
   
   register() {
     this.http.post('http://localhost:3000/register', { user: this.user, pass: this.pass, name: this.name, mail: this.mail })
       .subscribe(
         (response: any) => {
-          console.log(response); // Log the response for debugging
-          console.log(this.user, this.mail, this.name, this.pass);
+          console.log(response);
           if (response && response.message) {
-            this.message = response.message; // Set the message from the response
+            this.alertService.success('Registration successful! You can now log in to your account.');
           } else {
-            this.message = 'Registration successful!'; // Default success message
+            this.alertService.error('Registration failed. Please try again.');
           }
         },
         (error) => {
-          this.message = `Registration failed. ${error.error.message}`;
-          console.error('Error response:', error); // Log the entire error response
+          this.alertService.error("Registration failed! " + error.error.message + " Please try again.");
+          console.error('Error response:', error);
         }
       );
   }
