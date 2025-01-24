@@ -18,7 +18,7 @@ router.post('/', (req, res) => {
         .then (results => {
 
             if (results.rows.length == 0) {
-                res.status(400).send({ message: 'Login failed, please check your username and password.'})
+                return res.status(400).send({ message: 'Please check your username/email and password.'})
             }
 
             resultUser = results.rows[0];
@@ -28,12 +28,13 @@ router.post('/', (req, res) => {
 			res.status(200).json({
                 "message": "Login successful.",
                 login: resultUser.login,
+                name: resultUser.name,
                 token: token // Include the generated token in the response
             });
 
         })
         .catch(error => {
-            res.status(400).send({ message: 'Login failed, please check your username and password.'})
+            res.status(400).send({ message: 'Please check your username and password.'})
         });
 
 });
