@@ -11,7 +11,7 @@ router.post('/', (req, res) => {
     let user = req.body.user;
     let pass = req.body.pass;
     
-    const query = 'SELECT * FROM users WHERE login = $1 AND password = $2';
+    const query = 'SELECT * FROM users WHERE (login = $1 OR email = $1) AND password = $2';
     const values = [user, pass]; 
     
     pool.query(query, values)

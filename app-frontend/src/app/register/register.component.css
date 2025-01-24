@@ -18,3 +18,11 @@
     width: 1500px;
     text-align: center;
 }
+
+.custom-link {
+    color: #7C8399;
+}
+
+.custom-link:hover {
+    color: #585D6D;
+}

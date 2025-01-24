@@ -22,25 +22,25 @@
             <div class="modal-body p-5 pt-0">
             <form (ngSubmit)="register()">
                 <div class="form-floating mb-3">
-                <input type="user" class="form-control rounded-3" id="floatingInput" placeholder="MaxMuster99" [(ngModel)]="user" name="user" required>
+                <input type="user" class="form-control rounded-3" id="userInput" placeholder="MaxMuster99" [(ngModel)]="user" name="user" required>
                 <label for="floatingInput">Username</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="email" class="form-control rounded-3" id="floatingInput" placeholder="max.muster@example.com" [(ngModel)]="mail" name="mail" required>
+                    <input type="email" class="form-control rounded-3" id="mailInput" placeholder="max.muster@example.com" [(ngModel)]="mail" name="mail" required>
                     <label for="floatingInput">E-Mail</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="name" class="form-control rounded-3" id="floatingInput" placeholder="Max" [(ngModel)]="name" name="name" required>
+                    <input type="name" class="form-control rounded-3" id="nameInput" placeholder="Max" [(ngModel)]="name" name="name" required>
                     <label for="floatingPassword">First name</label>
                 </div>
                 <div class="form-floating mb-3">
-                <input type="password" class="form-control rounded-3" id="floatingPassword" placeholder="Password" [(ngModel)]="pass" name="pass" required>
+                <input type="password" class="form-control rounded-3" id="passInput" placeholder="Password" [(ngModel)]="pass" name="pass" required>
                 <label for="floatingPassword">Password</label>
                 </div>
-                <button (click)="goToLogin(); $event.preventDefault();" class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" style="background-color: #7C8399; color: white; border: none;" type="submit">Register</button>
-                <small class="text-body-secondary">By clicking Register, you will be redirected to the Login In screen.</small><br/>
+                <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" style="background-color: #7C8399; color: white; border: none;" type="submit">Register</button>
                 <small class="text-body-secondary">{{ message }}</small>
-                <hr class="my-4">
+                <hr class="mt-4 mb-2">
+                <small class="text-body-secondary">If you have successfully registered, please log in to your account. You can click <a href="#" (click)="goToLogin(); $event.preventDefault();" class="custom-link">here</a> to get to the login.</small>
             </form>
             </div>
         </div>

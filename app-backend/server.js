@@ -43,21 +43,21 @@ app.get("/logout", checkAuth, (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-    const { user, pass} = req.body;
+    const { user, pass, name, mail} = req.body;
 
     // Check if the user already exists
-    const text = 'SELECT * FROM users WHERE login = $1';
-    const values = [user];
+    const text = 'SELECT * FROM users WHERE login = $1 OR email = $2';
+    const values = [user, mail];
 
     try {
         const userCheckResult = await pool.query(text, values);
 
         if (userCheckResult.rows.length > 0) {
-            return res.status(400).send({ message: 'Username already exists.' });
+            return res.status(400).send({ message: 'Username or email already exists.' });
         }
 
-        const text2 = 'INSERT INTO users (login, password) VALUES ($1, $2)';
-        const values2 = [user, pass];
+        const text2 = 'INSERT INTO users (login, password, name, email) VALUES ($1, $2, $3, $4)';
+        const values2 = [user, pass, name, mail];
 
         await pool.query(text2, values2);
 

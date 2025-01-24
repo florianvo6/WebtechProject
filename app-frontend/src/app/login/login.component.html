@@ -22,18 +22,17 @@
           <div class="modal-body p-5 pt-0">
             <form (ngSubmit)="login()">
               <div class="form-floating mb-3">
-                <input type="email" class="form-control rounded-3" id="floatingInput" placeholder="name@example.com" [(ngModel)]="user" name="user" required>
-                <label for="floatingInput">Username</label>
+                <input type="email" class="form-control rounded-3" id="userInput" placeholder="name@example.com" [(ngModel)]="user" name="user" required>
+                <label for="userInput">Username or E-Mail</label>
               </div>
               <div class="form-floating mb-3">
-                <input type="password" class="form-control rounded-3" id="floatingPassword" placeholder="Password" [(ngModel)]="pass" name="pass" required>
-                <label for="floatingPassword">Password</label>
+                <input type="password" class="form-control rounded-3" id="passInput" placeholder="Password" [(ngModel)]="pass" name="pass" required>
+                <label for="passInput">Password</label>
               </div>
               <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" style="background-color: #7C8399; color: white; border: none;" type="submit">Sign in</button>
-              <small class="text-body-secondary">By clicking Sign in, you will be redirected to the home screen.</small><br/>
               <small class="text-body-secondary">{{ message }}</small>
-              <hr class="my-4">
-              <small class="text-body-secondary">If you dont have an account yet, pls register by clicking <a href="#" (click)="goToRegister(); $event.preventDefault();">here</a>.</small>
+              <hr class="mt-4 mb-2">
+              <small class="text-body-secondary">If you dont have an account yet, pls register by clicking <a href="#" (click)="goToRegister(); $event.preventDefault();" class="custom-link">here</a>.</small>
             </form>
           </div>
         </div>

@@ -19,10 +19,11 @@ export class RegisterComponent {
   constructor(private http: HttpClient, private router: Router) {}
   
   register() {
-    this.http.post('http://localhost:3000/register', { user: this.user, pass: this.pass })
+    this.http.post('http://localhost:3000/register', { user: this.user, pass: this.pass, name: this.name, mail: this.mail })
       .subscribe(
         (response: any) => {
           console.log(response); // Log the response for debugging
+          console.log(this.user, this.mail, this.name, this.pass);
           if (response && response.message) {
             this.message = response.message; // Set the message from the response
           } else {
