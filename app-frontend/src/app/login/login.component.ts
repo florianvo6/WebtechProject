@@ -26,7 +26,7 @@ export class LoginComponent {
   }
 
   login() {
-    this.http.post('http://localhost:3000/login', { user: this.user, pass: this.pass })
+    this.http.post('https://marketmingle.loca.lt/login', { user: this.user, pass: this.pass })
       .subscribe(
         (response: any) => {
           console.log(response);

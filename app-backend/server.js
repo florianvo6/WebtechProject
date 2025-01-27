@@ -86,6 +86,8 @@ app.get('/users', (req, res) => {
         });
 });
   
-let port = 3000;
-app.listen(port);
-console.log("Server running at: http://localhost:"+port);
+let port = 8000;
+
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server running at http://localhost:${port}`);
+});

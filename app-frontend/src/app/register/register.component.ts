@@ -28,7 +28,7 @@ export class RegisterComponent {
   }
   
   register() {
-    this.http.post('http://localhost:3000/register', { user: this.user, pass: this.pass, name: this.name, mail: this.mail })
+    this.http.post('https://marketmingle.loca.lt/register', { user: this.user, pass: this.pass, name: this.name, mail: this.mail })
       .subscribe(
         (response: any) => {
           console.log(response);
