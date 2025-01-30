@@ -29,7 +29,7 @@ export class DetailItemComponent {
 
   getData(id: number): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.http.post('http://localhost:8000/products/id', { id: this.id })
+      this.http.post('http://localhost:8000/marketitem/id', { id: this.id })
       .subscribe(
         (response: any) => {
           this.item = response;

@@ -4,24 +4,26 @@ import { Router } from '@angular/router';
 import { AlertService } from '../services/alert-service/alert.service';
 import { AlertComponent } from '../alert/alert.component';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { Alert } from '../services/models/alert-type';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Alert } from '../services/models/alert-type';
 
 @Component({
-  selector: 'app-add-marketplace',
+  selector: 'app-add-real-estate',
   imports: [AlertComponent, NavbarComponent, CommonModule, FormsModule],
-  templateUrl: './add-marketplace.component.html',
-  styleUrl: './add-marketplace.component.css'
+  templateUrl: './add-real-estate.component.html',
+  styleUrl: './add-real-estate.component.css'
 })
-export class AddMarketplaceComponent {
+export class AddRealEstateComponent {
   title: string = '';
   owner: string = '';
   description: string = '';
   price: number | null = null;
   address: string = '';
-  condition: string = '';
-  handover: string = '';
+  type: string = '';
+  selltype: string = '';
+  rooms: string = '';
+  size: string = '';
   name: string = '';
   alert: Alert | null = null;
 
@@ -49,15 +51,18 @@ export class AddMarketplaceComponent {
     const productData = {
       title: this.title,
       owner: this.owner,
+      name: this.name,
       description: this.description,
       price: this.price,
       address: this.address,
-      condition: this.condition,
-      handover: this.handover
+      type: this.type,
+      selltype: this.selltype,
+      size: this.size,
+      rooms: this.rooms
   };
 
   console.log(productData);
-    this.http.post('http://localhost:8000/add-marketitem', { title: this.title,  owner: this.owner, description: this.description, price: this.price, address: this.address, condition: this.condition, handover: this.handover, name: this.name})
+    this.http.post('http://localhost:8000/add-real-estate', { owner: this.owner, name: this.name, address: this.address, title: this.title, description: this.description, price: this.price, type: this.type, size: this.size, rooms: this.rooms, selltype: this.selltype})
       .subscribe(
         (response: any) => {
           console.log(response);

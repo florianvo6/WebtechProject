@@ -6,6 +6,8 @@ import { HomeComponent } from './home/home.component';
 import { MarketplaceComponent } from './marketplace/marketplace.component';
 import { AddMarketplaceComponent } from './add-marketplace/add-marketplace.component';
 import { DetailItemComponent } from './detail-item/detail-item.component';
+import { RealEstateComponent } from './real-estate/real-estate.component';
+import { AddRealEstateComponent } from './add-real-estate/add-real-estate.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -15,6 +17,8 @@ export const routes: Routes = [
   { path: 'marketplace', component: MarketplaceComponent },
   { path: 'add-market-item', component: AddMarketplaceComponent },
   { path: 'product-detail/:id', component: DetailItemComponent },
+  { path: 'real-estate', component: RealEstateComponent },
+  { path: 'add-real-estate-item', component: AddRealEstateComponent },
   { path: '', redirectTo: '/welcome', pathMatch: 'full' },
   { path: '**', redirectTo: '/welcome' } 
 ];

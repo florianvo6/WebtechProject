@@ -20,7 +20,7 @@ export class HomeComponent {
   }
 
   goToRealEstate() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/real-estate']);
   }
 
   goToVehicles() {
