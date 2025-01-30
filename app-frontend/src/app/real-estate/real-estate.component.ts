@@ -1,19 +1,20 @@
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AlertService } from '../services/alert-service/alert.service';
 import { CommonModule } from '@angular/common';
 import { AlertComponent } from '../alert/alert.component';
 import { NavbarComponent } from '../navbar/navbar.component';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { AlertService } from '../services/alert-service/alert.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-marketplace',
-  imports: [AlertComponent, NavbarComponent, CommonModule, FormsModule],
-  templateUrl: './marketplace.component.html',
-  styleUrl: './marketplace.component.css'
+  selector: 'app-real-estate',
+  imports: [CommonModule, AlertComponent, NavbarComponent, FormsModule],
+  templateUrl: './real-estate.component.html',
+  styleUrl: './real-estate.component.css'
 })
-export class MarketplaceComponent {
+export class RealEstateComponent {
+
   data: any[] = [];
   owner: string | null = null;
   searchTerm: string = '';
@@ -26,10 +27,10 @@ export class MarketplaceComponent {
 
     await this.getProducts();
   }
- 
+
   getProducts(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.http.get('http://localhost:8000/marketitems').subscribe(
+      this.http.get('http://localhost:8000/real-estate').subscribe(
         (response: any) => {
           // Filter products based on owner
           this.data = response.filter((product: any) => product.owner !== this.owner);
@@ -43,18 +44,18 @@ export class MarketplaceComponent {
     });
   }
 
-  async filterData (condition: string, handover: string) {
+  async filterData (type: string, selltype: string) {
     await this.getProducts();
 
     try {
-      if (condition && !handover) {
-        this.data = this.data.filter(item => condition === item.condition);
+      if (type && !selltype) {
+        this.data = this.data.filter(item => type === item.type);
       }
-      else if (!condition && handover) {
-        this.data = this.data.filter(item => handover === item.handover);
+      else if (!type && selltype) {
+        this.data = this.data.filter(item => selltype === item.handover);
       }
-      else if (condition && handover) {
-        this.data = this.data.filter(item => condition === item.condition && handover === item.handover);
+      else if (type && selltype) {
+        this.data = this.data.filter(item => type === item.type && selltype === item.selltype);
       }
     }
     catch (error) {
@@ -76,7 +77,7 @@ export class MarketplaceComponent {
   }
 
   public navigateToAddPage() {
-    this.router.navigate(['/add-market-item']);
+    this.router.navigate(['/add-real-estate-item']);
   }
 
   public navigateToDetailPage(id: number) {

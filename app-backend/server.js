@@ -71,7 +71,7 @@ app.get('/users', (req, res) => {
 });
 
 // Endpoint to add a new item
-app.post('/add-product', async (req, res) => {
+app.post('/add-marketitem', async (req, res) => {
     const { title, owner, description, price, address, condition, handover, name} = req.body;
 
     // Validate input
@@ -79,7 +79,7 @@ app.post('/add-product', async (req, res) => {
         return res.status(400).send({ message: 'All fields are required.' });
     }
 
-    const text = 'INSERT INTO products (title, owner, description, price, address, condition, handover, name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)';
+    const text = 'INSERT INTO marketitems (title, owner, description, price, address, condition, handover, name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)';
     const values = [title, owner, description, price, address, condition, handover, name];
 
     try {
@@ -92,8 +92,8 @@ app.post('/add-product', async (req, res) => {
 });
 
 // Endpoint to get all items
-app.get('/products', async (req, res) => {
-    const query = 'SELECT * FROM products';
+app.get('/marketitems', async (req, res) => {
+    const query = 'SELECT * FROM marketitems';
 
     try {
         const results = await pool.query(query);
@@ -108,9 +108,63 @@ app.get('/products', async (req, res) => {
 });
 
 // Endpoint to get a specific product by ID
-app.post('/products/id', async (req, res) => {
+app.post('/marketitem/id', async (req, res) => {
     const { id } = req.body;
-    const text = 'SELECT * FROM products WHERE id = $1';
+    const text = 'SELECT * FROM marketitems WHERE id = $1';
+
+    const values = [id];
+
+    try {
+        const results = await pool.query(text, values);
+        if (results.rows.length === 0) {
+            return res.status(404).send("Item not found.");
+        }
+        return res.status(200).json(results.rows[0]);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send("Error retrieving item.");
+    }
+});
+
+app.post('/add-real-estate', async (req, res) => {
+    const { owner, name, address, title, description, price, type, size, rooms, selltype} = req.body;
+
+    // Validate input
+    if (!owner || !name || !address || !title || !description || !price || !type || !size || !rooms || !selltype) {
+        return res.status(400).send({ message: 'All fields are required.' });
+    }
+
+    const text = 'INSERT INTO immoitems (owner, name, address, title, description, price, type, size, rooms, selltype) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)';
+    const values = [owner, name, address, title, description, price, type, size, rooms, selltype];
+
+    try {
+        await pool.query(text, values);
+        return res.status(201).send({ message: 'Item added successfully!' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({ message: 'Error adding item. Please try again later.' });
+    }
+});
+
+app.get('/real-estate', async (req, res) => {
+    const query = 'SELECT * FROM immoitems';
+
+    try {
+        const results = await pool.query(query);
+        if (results.rows.length === 0) {
+            return res.status(404).send("No items found.");
+        }
+        return res.status(200).json(results.rows);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send("Error retrieving items.");
+    }
+});
+
+// Endpoint to get a specific product by ID
+app.post('/real-estate/id', async (req, res) => {
+    const { id } = req.body;
+    const text = 'SELECT * FROM immoitems WHERE id = $1';
 
     const values = [id];
 

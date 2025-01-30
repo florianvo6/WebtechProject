@@ -1,0 +1,69 @@
+<app-navbar></app-navbar>
+<app-alert></app-alert>
+<div class="modal-container w-50">
+    <br/>
+    <h1 class="pb-2 border-bottom text-white">Sell New Item</h1>
+   
+    <div class="modal modal-sheet position-static d-block p-4 py-md-3" tabindex="-1" role="dialog" id="modalSignin">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-header p-5 pb-4 border-bottom-0">
+                    <h1 class="fw-bold mb-0 fs-2 text-center">Add Item</h1>
+                </div>
+   
+                <div class="modal-body p-5 pt-0">
+                    <form (ngSubmit)="addItem()" #registrationForm="ngForm">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control rounded-3" id="titleInput" placeholder="Title" [(ngModel)]="title" name="title" required>
+                            <label for="titleInput">Title</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control rounded-3" id="descriptionInput" placeholder="Description" [(ngModel)]="description" name="description" required></textarea>
+                            <label for="descriptionInput">Description</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control rounded-3" id="priceInput" placeholder="99€" [(ngModel)]="price" name="price" required>
+                            <label for="priceInput">Price</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-select rounded-3" id="typeInput" [(ngModel)]="type" name="type" required>
+                                <option value="" disabled selected>Select Type</option>
+                                <option value="House">House</option>
+                                <option value="Apartment">Apartment</option>
+                            </select>
+                            <label for="typeInput">Type</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-select rounded-3" id="selltypeInput" [(ngModel)]="selltype" name="selltype" required>
+                                <option value="" disabled selected>Select Selltype</option>
+                                <option value="Buy">Buy</option>
+                                <option value="Rent">Rent</option>
+                            </select>
+                            <label for="selltypeInput">Selltype</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control rounded-3" id="sizeInput" placeholder="99" [(ngModel)]="size" name="size" required>
+                            <label for="sizeInput">Size</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-select rounded-3" id="roomsInput" [(ngModel)]="rooms" name="rooms" required>
+                                <option value="" disabled selected>Select Rooms</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="More">More</option>
+                            </select>
+                            <label for="roomsInput">Rooms</label>
+                        </div>
+                        <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" style="background-color: #7C8399; color: white; border: none;" type="submit" [disabled]="!registrationForm.valid">Add Item</button>
+                        <hr class="mt-4 mb-2">
+                        <small class="text-body-secondary">You can check your own items by visiting your profile. <a href="#" (click)="goToProfil(); $event.preventDefault();" class="custom-link">here</a></small>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
