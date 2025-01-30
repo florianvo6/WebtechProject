@@ -26,12 +26,15 @@ export class LoginComponent {
   }
 
   login() {
-    this.http.post('https://marketmingle.loca.lt/login', { user: this.user, pass: this.pass })
+    this.http.post('http://localhost:8000/login', { user: this.user, pass: this.pass })
       .subscribe(
         (response: any) => {
           console.log(response);
           if (response.token) {
             localStorage.setItem('token', response.token);
+            localStorage.setItem('username', response.login);
+            localStorage.setItem('name', response.name);
+            localStorage.setItem('address', response.address);
             this.alertService.success("Login successful! Welcome back " + response.name + ", nice to see you.");
             this.alertService.keepAfterRouteChange();
             this.goToHome();

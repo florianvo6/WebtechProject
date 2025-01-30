@@ -29,6 +29,7 @@ router.post('/', (req, res) => {
                 "message": "Login successful.",
                 login: resultUser.login,
                 name: resultUser.name,
+                address: resultUser.address,
                 token: token // Include the generated token in the response
             });
 

@@ -16,7 +16,7 @@ export class NavbarComponent {
   }
 
   goToMarketplace() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/marketplace']);
   }
 
   goToRealEstate() {
