@@ -2,8 +2,8 @@
     "database": {
         "host": "localhost",
         "user": "postgres",
-        "password": "Vojtfn0301",
-        "db": "webtech24jwt"
+        "password": "Vojtfn030198!?",
+        "db": "webtech21jwt"
     },
 	"auth": {
         "jwt_key": "secret",

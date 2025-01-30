@@ -18,7 +18,7 @@ export class RegisterComponent {
   mail: string = '';
   name: string = '';
   pass: string = '';
-  message: string = '';
+  address: string = '';
   alert: Alert | null = null;
 
   constructor(private http: HttpClient, private router: Router, private alertService: AlertService) {}
@@ -28,7 +28,7 @@ export class RegisterComponent {
   }
   
   register() {
-    this.http.post('https://marketmingle.loca.lt/register', { user: this.user, pass: this.pass, name: this.name, mail: this.mail })
+    this.http.post('http://localhost:8000/register', { user: this.user, pass: this.pass, name: this.name, mail: this.mail, address: this.address })
       .subscribe(
         (response: any) => {
           console.log(response);

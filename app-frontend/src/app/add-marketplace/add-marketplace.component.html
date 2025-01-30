@@ -1,0 +1,55 @@
+<app-navbar></app-navbar>
+<app-alert></app-alert>
+<div class="modal-container w-50">
+    <br/>
+    <h1 class="pb-2 border-bottom text-white">Sell New Item</h1>
+   
+    <div class="modal modal-sheet position-static d-block p-4 py-md-3" tabindex="-1" role="dialog" id="modalSignin">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-header p-5 pb-4 border-bottom-0">
+                    <h1 class="fw-bold mb-0 fs-2 text-center">Add Item</h1>
+                </div>
+   
+                <div class="modal-body p-5 pt-0">
+                    <form (ngSubmit)="addItem()" #registrationForm="ngForm">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control rounded-3" id="titleInput" placeholder="Title" [(ngModel)]="title" name="title" required>
+                            <label for="titleInput">Title</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control rounded-3" id="descriptionInput" placeholder="Description" [(ngModel)]="description" name="description" required></textarea>
+                            <label for="descriptionInput">Description</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control rounded-3" id="priceInput" placeholder="99€" [(ngModel)]="price" name="price" required>
+                            <label for="priceInput">Price</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-select rounded-3" id="conditionInput" [(ngModel)]="condition" name="condition" required>
+                                <option value="" disabled selected>Select Condition</option>
+                                <option value="Brandnew">Brandnew</option>
+                                <option value="Slightly Used">Slightly Used</option>
+                                <option value="Used">Used</option>
+                                <option value="Very used">Very Used</option>
+                                <option value="Extremely Used">Extremely Used</option>
+                            </select>
+                            <label for="conditionInput">Condition</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-select rounded-3" id="handoverInput" [(ngModel)]="handover" name="handover" required>
+                                <option value="" disabled selected>Select Handover Method</option>
+                                <option value="Self Pickup">Self Pickup</option>
+                                <option value="Delivery">Delivery</option>
+                            </select>
+                            <label for="handoverInput">Handover</label>
+                        </div>
+                        <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" style="background-color: #7C8399; color: white; border: none;" type="submit" [disabled]="!registrationForm.valid">Add Item</button>
+                        <hr class="mt-4 mb-2">
+                        <small class="text-body-secondary">You can check your own items by visiting your profile. <a href="#" (click)="goToProfil(); $event.preventDefault();" class="custom-link">here</a></small>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

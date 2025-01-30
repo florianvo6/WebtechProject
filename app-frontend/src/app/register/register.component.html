@@ -24,7 +24,7 @@
             <div class="modal-body p-5 pt-0">
             <form (ngSubmit)="register()" #registrationForm="ngForm">
                 <div class="form-floating mb-3">
-                <input type="user" class="form-control rounded-3" id="userInput" placeholder="MaxMuster99" [(ngModel)]="user" name="user" required>
+                <input type="text" class="form-control rounded-3" id="userInput" placeholder="MaxMuster99" [(ngModel)]="user" name="user" required>
                 <label for="floatingInput">Username</label>
                 </div>
                 <div class="form-floating mb-3">
@@ -32,12 +32,16 @@
                     <label for="floatingInput">E-Mail</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="name" class="form-control rounded-3" id="nameInput" placeholder="Max" [(ngModel)]="name" name="name" required>
-                    <label for="floatingPassword">First name</label>
+                    <input type="text" class="form-control rounded-3" id="nameInput" placeholder="Max" [(ngModel)]="name" name="name" required>
+                    <label for="floatingInput">First name</label>
                 </div>
                 <div class="form-floating mb-3">
                 <input type="password" class="form-control rounded-3" id="passInput" placeholder="Password" [(ngModel)]="pass" name="pass" required>
                 <label for="floatingPassword">Password</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control rounded-3" id="addressInput" placeholder="Examplestreet 99, 9900 Example" [(ngModel)]="address" name="address" required>
+                    <label for="floatingInput">Address</label>
                 </div>
                 <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" style="background-color: #7C8399; color: white; border: none;" type="submit" [disabled]="!registrationForm.valid">Register</button>
                 <hr class="mt-4 mb-2">
