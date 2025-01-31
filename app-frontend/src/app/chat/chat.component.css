@@ -1,0 +1,30 @@
+.modal-container {
+    background-color: #585d6d90;
+    border-radius: 15px;
+    margin: 25px auto;
+    width: 1500px;
+    text-align: center;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.card-text {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.hover-effect {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-effect:hover {
+    transform: scale(1.03);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+

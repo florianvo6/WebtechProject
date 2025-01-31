@@ -180,6 +180,109 @@ app.post('/real-estate/id', async (req, res) => {
     }
 });
 
+// Endpoint to create a new chat
+app.post('/chats', async (req, res) => {
+    const { sender, title, recipient } = req.body;
+
+    if (!sender || !title || !recipient) {
+        return res.status(400).send("Sender, title, and recipient are required.");
+    }
+
+    const text = 'INSERT INTO chats (sender, title, recipient) VALUES ($1, $2, $3) RETURNING *';
+    const values = [sender, title, recipient];
+
+    try {
+        const results = await pool.query(text, values);
+        return res.status(201).json(results.rows[0]); // Return the newly created chat
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send("Error creating chat.");
+    }
+});
+
+// Endpoint to get all chats of an user
+app.post('/chats/recipient', async (req, res) => {
+    const { recipient } = req.body;
+
+    // Validate input
+    if (!recipient) {
+        return res.status(400).send("Recipient ID is required.");
+    }
+
+    const text = 'SELECT * FROM chats WHERE recipient = $1 OR sender = $1;';
+    const values = [recipient];
+
+    try {
+        const results = await pool.query(text, values);
+        return res.status(200).json(results.rows);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send("Error retrieving chats.");
+    }
+});
+
+// Endpoint to get a chat with the id
+app.post('/chat/id', async (req, res) => {
+    const { id } = req.body;
+    const text = 'SELECT * FROM chats WHERE id = $1';
+
+    const values = [id];
+
+    try {
+        const results = await pool.query(text, values);
+        if (results.rows.length === 0) {
+            return res.status(404).send("Chat not found.");
+        }
+        return res.status(200).json(results.rows[0]);
+    } catch (error) {
+        console.error(error); 
+        return res.status(500).send("Error retrieving chat.");
+    }
+});
+
+app.post('/messages/chatId', async (req, res) => {
+    const { id } = req.body; // Get the chat ID from the request body
+    const text = 'SELECT * FROM messages WHERE chat_id = $1 ORDER BY time ASC'; // SQL query to select messages
+
+    const values = [id]; // Values to be used in the query
+
+    try {
+        const results = await pool.query(text, values); // Execute the query
+        if (results.rows.length === 0) {
+            return res.status(404).send("No messages found for this chat."); // Handle case where no messages are found
+        }
+        return res.status(200).json(results.rows); // Return the messages
+    } catch (error) {
+        console.error(error); // Log any errors
+        return res.status(500).send("Error retrieving messages."); // Handle server errors
+    }
+});
+
+// Endpoint to create a new message
+app.post('/add-message', async (req, res) => {
+    const { chat_id, sender, recipient, text, time } = req.body;
+
+    // Validate input
+    if (!chat_id || !sender || !recipient || !text) {
+        return res.status(400).send("Chat ID, sender, recipient, and text are required.");
+    }
+
+    const query = `
+        INSERT INTO messages (chat_id, sender, recipient, text, time)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING *;
+    `;
+    const values = [chat_id, sender, recipient, text, time];
+
+    try {
+        const results = await pool.query(query, values);
+        return res.status(201).json(results.rows[0]);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send("Error creating message.");
+    }
+});
+
 let port = 8000;
 
 app.listen(port, '0.0.0.0', () => {

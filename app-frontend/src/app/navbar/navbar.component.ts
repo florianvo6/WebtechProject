@@ -27,6 +27,10 @@ export class NavbarComponent {
     this.router.navigate(['/']);
   }
 
+  goToInbox() {
+    this.router.navigate(['/inbox']);
+  }
+
   goToProfil() {
     this.router.navigate(['/']);
   }

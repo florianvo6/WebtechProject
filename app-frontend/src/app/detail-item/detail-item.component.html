@@ -1,5 +1,6 @@
 <app-navbar></app-navbar>
-<div class="modal-container">
+<app-alert></app-alert>
+<div class="modal-container w-50">
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
         <br />
         <main role="main" class="inner cover">
@@ -38,7 +39,11 @@
                             <img src="assets/handover.png" alt="Price Icon" class="icon" />
                             <strong>Handover:</strong> {{ item.handover }}
                         </p>
-                        <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" style="background-color: #7C8399; color: white; border: none;" (click)="sendMessage()">Send Request</button>
+                        <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" style="background-color: #7C8399; color: white; border: none;" (click)="toggleMessageInput()">Send Request</button>
+                        <div *ngIf="showMessageInput">
+                            <input type="text" [(ngModel)]="messageText" placeholder="Type your message here..." class="form-control mb-2" />
+                            <button class="btn btn-primary" style="background-color: #7C8399; color: white; border: none;" (click)="sendMessage()">Send</button>
+                        </div>
                     </div>
                 </div>
             </div>
