@@ -20,7 +20,6 @@ export class ChatComponent {
   constructor(private http: HttpClient, private router: Router, private alertService: AlertService) {}
 
   async ngOnInit() {
-    this.alertService.clear();
     this.recipient = localStorage.getItem('username');
 
     await this.getChats();

@@ -28,6 +28,7 @@ export class DetailChatComponent {
 
   ngOnInit() {
     this.chatUser = localStorage.getItem('username');
+    this.alertService.clear();
     this.route.params.subscribe(async params => {
       this.chatId = +params['id'];
       await this.getData(this.chatId);
@@ -65,7 +66,7 @@ export class DetailChatComponent {
                 reject(error);
             });
     });
-}
+  }
 
   async sendMessage() {
     if (!this.newMessage.trim()) {
@@ -98,6 +99,21 @@ export class DetailChatComponent {
     );
   }
 
+  deleteChat(id = this.chatId): Promise<void> {
+    return new Promise((resolve, reject) => {
+        this.http.delete('http://localhost:8000/delete-chat/chatId/' + id)
+            .subscribe((response: any) => {
+                this.alertService.success('Chat deleted successfully!');
+                this.alertService.keepAfterRouteChange();
+                this.cdr.detectChanges();
+                this.goToInbox();
+                resolve();
+            }, error => {
+                console.error('Error deleting chat:', error);
+                reject(error);
+            });
+    });
+  }
   
   getRecipient(): Promise<string> {
     return new Promise((resolve) => {
@@ -107,5 +123,9 @@ export class DetailChatComponent {
             resolve(this.chat.recipient);
         }
     });
-}
+  }
+
+  goToInbox() {
+    this.router.navigate(['/inbox']);
+  }
 }

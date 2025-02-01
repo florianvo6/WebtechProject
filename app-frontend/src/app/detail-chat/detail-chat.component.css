@@ -20,6 +20,10 @@
     width: 100%;
 }
 
+.header-container {
+    align-self: flex-start;
+}
+
 .padding-container {
     padding-left: 120px;
     padding-right: 120px;
@@ -37,6 +41,16 @@ margin: 5px 0;
 max-width: 70%;
 }
 
+.btn-send:hover {
+    background-color: #5a6d58;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #6d5858;
+    color: white;
+}
+
 .message-recipient {
 align-self: flex-start;
 background-color: rgb(123, 160, 160);
@@ -50,4 +64,15 @@ max-width: 70%;
 .message-time {
 font-size: 0.8em; 
 text-align: right; 
+}
+
+.form-control:focus {
+    border-color: #585D6D;
+    box-shadow: 0 0 0 0.2rem #50587281;
+    outline: none;
+}
+
+.header {
+    color:#585D6D;
+    text-align: left;
 }

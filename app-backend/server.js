@@ -258,6 +258,35 @@ app.post('/messages/chatId', async (req, res) => {
     }
 });
 
+app.delete('/delete-chat/chatId/:id', async (req, res) => {
+    const { id } = req.params; 
+
+    const deleteMessagesText = 'DELETE FROM messages WHERE chat_id = $1'; 
+    const deleteChatText = 'DELETE FROM chats WHERE id = $1 RETURNING *'; 
+
+    const values = [id];
+
+    try {
+        await pool.query('BEGIN');
+
+        await pool.query(deleteMessagesText, values);
+
+        const result = await pool.query(deleteChatText, values);
+        
+        if (result.rowCount === 0) {
+            await pool.query('ROLLBACK'); 
+            return res.status(404).send("Chat not found.");
+        }
+
+        await pool.query('COMMIT'); 
+        return res.status(200).json({ message: "Chat and associated messages deleted successfully.", chat: result.rows[0] });
+    } catch (error) {
+        await pool.query('ROLLBACK');
+        console.error(error); 
+        return res.status(500).send("Error deleting chat and messages.");
+    }
+});
+
 // Endpoint to create a new message
 app.post('/add-message', async (req, res) => {
     const { chat_id, sender, recipient, text, time } = req.body;
