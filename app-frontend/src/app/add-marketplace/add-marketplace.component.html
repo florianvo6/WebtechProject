@@ -12,10 +12,14 @@
                 </div>
    
                 <div class="modal-body p-5 pt-0">
-                    <form (ngSubmit)="addItem()" #registrationForm="ngForm">
+                    <form (ngSubmit)="onUpload()" #registrationForm="ngForm">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control rounded-3" id="titleInput" placeholder="Title" [(ngModel)]="title" name="title" required>
                             <label for="titleInput">Title</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="file" class="form-control rounded-3" (change)="onFileSelected($event)" accept="image/*" id="imageInput" placeholder="Image" name="image" required>
+                            <label for="ImageInput">Image</label>
                         </div>
                         <div class="form-floating mb-3">
                             <textarea class="form-control rounded-3" id="descriptionInput" placeholder="Description" [(ngModel)]="description" name="description" required></textarea>

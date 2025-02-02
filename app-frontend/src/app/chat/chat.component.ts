@@ -14,20 +14,22 @@ import { CommonModule } from '@angular/common';
   styleUrl: './chat.component.css'
 })
 export class ChatComponent {
-  recipient: string | null = '';
+  chatUser: string | null = '';
+  chatPartner: string | null = '';
+  isUserSender: boolean | undefined;
   data: any[] = [];
 
   constructor(private http: HttpClient, private router: Router, private alertService: AlertService) {}
 
   async ngOnInit() {
-    this.recipient = localStorage.getItem('username');
+    this.chatUser  = localStorage.getItem('username');
 
     await this.getChats();
   }
 
   getChats(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.http.post('http://localhost:8000/chats/recipient', { recipient: this.recipient })
+      this.http.post('http://localhost:8000/chats/recipient', { recipient: this.chatUser })
       .subscribe(
         (response: any) => {
           this.data = response;
@@ -39,6 +41,14 @@ export class ChatComponent {
         }
       );
     });
+  }
+
+  getRecipient(chatSender: String) : boolean {
+        if (this.chatUser == chatSender) {
+            return true;
+        } else {
+          return false;
+        }
   }
 
   public navigateToDetailPage(id: number) {

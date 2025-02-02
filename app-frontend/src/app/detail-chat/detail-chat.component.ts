@@ -115,14 +115,12 @@ export class DetailChatComponent {
     });
   }
   
-  getRecipient(): Promise<string> {
-    return new Promise((resolve) => {
-        if (this.chatUser  !== this.chat.sender) {
-            resolve(this.chat.sender);
-        } else {
-            resolve(this.chat.recipient);
-        }
-    });
+  getRecipient(): String {
+    if (this.chatUser == this.chat.sender) {
+        return this.chat.recipient;
+    } else {
+      return this.chat.sender;
+    }
   }
 
   goToInbox() {

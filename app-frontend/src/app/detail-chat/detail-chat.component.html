@@ -3,8 +3,15 @@
 <div class="modal-container w-50">
     <h1 class="pb-2 pt-4 border-bottom text-white">Chat Details</h1>
     <div class="padding-container">
-        <div class="header-container bg-white rounded-3 mb-3 p-1">
-            <h4 class="header px-2"> Request of user {{ chat.recipient }} for {{ chat.title }}</h4>
+        <div class="header-container rounded-3 mb-3 p-1 border-bottom">
+            <p class="card-text text-start">
+            <img src="assets/profil-black.png" alt="Seller Icon" class="icon" />
+            {{ getRecipient() }}
+            </p>
+            <p class="card-text text-end">
+            <img src="assets/message-black.png" alt="Seller Icon" class="icon" />
+            {{ chat.title }}
+            </p>
         </div>
     <div class="chat-container rounded-3">
         <div *ngFor="let message of messages" [ngClass]="{'message-sender': message.sender === chatUser , 'message-recipient': message.sender !== chatUser }">

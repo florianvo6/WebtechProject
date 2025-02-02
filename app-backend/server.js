@@ -10,6 +10,7 @@ const pool = require('./pool.js');
 
 let bodyParser = require('body-parser');
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const checkAuth = require('./check_auth');
 
@@ -72,15 +73,16 @@ app.get('/users', (req, res) => {
 
 // Endpoint to add a new item
 app.post('/add-marketitem', async (req, res) => {
-    const { title, owner, description, price, address, condition, handover, name} = req.body;
+    const { title, owner, description, price, address, condition, handover, name, image_url} = req.body;
 
     // Validate input
-    if (!title || !owner || !description || !price || !address || !condition || !handover || !name) {
+    if (!title || !owner || !description || !price || !address || !condition || !handover || !name || !image_url) {
+        console.info(title, owner, description, price, address, condition, handover, name, image_url);
         return res.status(400).send({ message: 'All fields are required.' });
     }
 
-    const text = 'INSERT INTO marketitems (title, owner, description, price, address, condition, handover, name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)';
-    const values = [title, owner, description, price, address, condition, handover, name];
+    const text = 'INSERT INTO marketitems (title, owner, description, price, address, condition, handover, name, image_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)';
+    const values = [title, owner, description, price, address, condition, handover, name, image_url];
 
     try {
         await pool.query(text, values);
@@ -312,24 +314,9 @@ app.post('/add-message', async (req, res) => {
     }
 });
 
+
 let port = 8000;
 
 app.listen(port, '0.0.0.0', () => {
     console.log(`Server running at http://localhost:${port}`);
 });
-
-/*
-app.get("/products", checkAuth, (req, res) => {
-    pool.query('SELECT * from products')
-        .then(db => res.status(200).send(db.rows))
-        .catch(err => res.status(400).send("Error while fetching data"))
-});
-
-app.get("/product/*", checkAuth, (req, res) => {
-    let id = req.url.substring(req.url.lastIndexOf('/') + 1);
-    const text = 'SELECT * from products WHERE id = $1';
-    const values = [id]; //For more parameters ($1, $2, $3...) use [val1, val2, val3...]
-    pool.query(text, values)
-        .then(db => res.status(200).send(db.rows))
-        .catch(err => res.status(400).send("Error while fetching data"))
-});*/
