@@ -81,7 +81,7 @@ export class RealEstateComponent {
   }
 
   public navigateToDetailPage(id: number) {
-    this.router.navigate(['/product-detail', id]);
+    this.router.navigate(['/real-estate-detail', id]);
   }
 
   gotoButtonClicked(event: MouseEvent) {

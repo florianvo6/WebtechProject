@@ -129,15 +129,15 @@ app.post('/marketitem/id', async (req, res) => {
 });
 
 app.post('/add-real-estate', async (req, res) => {
-    const { owner, name, address, title, description, price, type, size, rooms, selltype} = req.body;
+    const { owner, name, address, title, description, price, type, size, rooms, selltype, image_url} = req.body;
 
     // Validate input
-    if (!owner || !name || !address || !title || !description || !price || !type || !size || !rooms || !selltype) {
+    if (!owner || !name || !address || !title || !description || !price || !type || !size || !rooms || !selltype || !image_url) {
         return res.status(400).send({ message: 'All fields are required.' });
     }
 
-    const text = 'INSERT INTO immoitems (owner, name, address, title, description, price, type, size, rooms, selltype) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)';
-    const values = [owner, name, address, title, description, price, type, size, rooms, selltype];
+    const text = 'INSERT INTO immoitems (owner, name, address, title, description, price, type, size, rooms, selltype, image_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)';
+    const values = [owner, name, address, title, description, price, type, size, rooms, selltype, image_url];
 
     try {
         await pool.query(text, values);

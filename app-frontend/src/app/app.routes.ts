@@ -10,6 +10,7 @@ import { RealEstateComponent } from './real-estate/real-estate.component';
 import { AddRealEstateComponent } from './add-real-estate/add-real-estate.component';
 import { ChatComponent } from './chat/chat.component';
 import { DetailChatComponent } from './detail-chat/detail-chat.component';
+import { DetailRealEstateComponent } from './detail-real-estate/detail-real-estate.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -21,6 +22,7 @@ export const routes: Routes = [
   { path: 'product-detail/:id', component: DetailItemComponent },
   { path: 'real-estate', component: RealEstateComponent },
   { path: 'add-real-estate-item', component: AddRealEstateComponent },
+  { path: 'real-estate-detail/:id', component: DetailRealEstateComponent },
   { path: 'inbox', component: ChatComponent },
   { path: 'chat-detail/:id', component: DetailChatComponent },
   { path: '', redirectTo: '/welcome', pathMatch: 'full' },

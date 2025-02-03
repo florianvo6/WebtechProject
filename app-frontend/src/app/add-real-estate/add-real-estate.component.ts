@@ -7,6 +7,8 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { Alert } from '../services/models/alert-type';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ImageService } from '../services/image-service/image.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-add-real-estate',
@@ -25,9 +27,14 @@ export class AddRealEstateComponent {
   rooms: string = '';
   size: string = '';
   name: string = '';
+  imageUrl: string = '';
+
+  imageId: number | null = null;
+  jobId: number | null = null;
+  selectedFile: File | null = null;
   alert: Alert | null = null;
 
-  constructor(private http: HttpClient, private router: Router, private alertService: AlertService) { }
+  constructor(private imageService: ImageService, private http: HttpClient, private router: Router, private alertService: AlertService) { }
  
   ngOnInit() {
     this.alertService.clear();
@@ -48,21 +55,7 @@ export class AddRealEstateComponent {
   }
 
   addItem() {
-    const productData = {
-      title: this.title,
-      owner: this.owner,
-      name: this.name,
-      description: this.description,
-      price: this.price,
-      address: this.address,
-      type: this.type,
-      selltype: this.selltype,
-      size: this.size,
-      rooms: this.rooms
-  };
-
-  console.log(productData);
-    this.http.post('http://localhost:8000/add-real-estate', { owner: this.owner, name: this.name, address: this.address, title: this.title, description: this.description, price: this.price, type: this.type, size: this.size, rooms: this.rooms, selltype: this.selltype})
+    this.http.post('http://localhost:8000/add-real-estate', { owner: this.owner, name: this.name, address: this.address, title: this.title, description: this.description, price: this.price, type: this.type, size: this.size, rooms: this.rooms, selltype: this.selltype, image_url: this.imageUrl})
       .subscribe(
         (response: any) => {
           console.log(response);
@@ -81,5 +74,92 @@ export class AddRealEstateComponent {
 
   goToProfil() {
     this.router.navigate(['/profil']);
+  }
+
+  goToRealEstate() {
+    this.router.navigate(['/real-estate']);
+  }
+
+  onFileSelected(event: Event): void {
+      const input = event.target as HTMLInputElement;
+      if (input.files && input.files.length > 0) {
+          this.selectedFile = input.files[0];
+      }
+    }
+  
+    async onUpload(): Promise<void> {
+      if (this.selectedFile) {
+          try {
+              const response = await firstValueFrom(this.imageService.uploadImage(this.selectedFile));
+              console.log('Upload successful:', response);
+              this.jobId = response.jobID;
+              await this.retrieveImageData();
+              this.goToRealEstate()
+          } catch (error) {
+              console.error('Upload failed:', error);
+              this.alertService.error('Upload failed!');
+          }
+      } else {
+          this.alertService.error('Please select a file first.');
+      }
+  }
+  
+  async retrieveImageData(): Promise<void> {
+    if (this.jobId != null) {
+        let attempts = 0;
+        const maxAttempts = 10;
+        const interval = 2000;
+  
+        while (attempts < maxAttempts) {
+            try {
+                const response = await firstValueFrom(this.imageService.getJobDetails(this.jobId.toString()));
+                console.log('Job details:', response);
+                if (response.success) {
+                    const finishedJobData = response.job.finishedJobData;
+  
+                    if (finishedJobData) {
+                        this.imageId = finishedJobData.fileID;
+                        await this.retrieveImage();
+                        console.log('Image ID:', this.imageId);
+                        return;
+                    } else {
+                        console.warn('Finished job data is null. Retrying...');
+                    }
+                } else {
+                    console.error('Job retrieval failed:', response);
+                }
+            } catch (error) {
+                console.error('Error retrieving job details:', error);
+            }
+  
+            attempts++;
+            await new Promise(resolve => setTimeout(resolve, interval));
+        }
+  
+        console.error('Max attempts reached. Job may not be finished or there was an error.');
+    }
+  }
+  
+  async retrieveImage(): Promise<void> {
+    if (this.imageId) {
+        try {
+            const response = await firstValueFrom(this.imageService.downloadImage(this.imageId.toString()));
+            if (response.success) {
+                this.imageUrl = await this.setDirectDownloadFalse(response.downloadURL); 
+                console.log('Image URL:', this.imageUrl);
+                await this.addItem();
+            } else {
+                console.error('Failed to retrieve image URL:', response);
+            }
+        } catch (error) {
+            console.error('Error downloading image:', error);
+        }
+    }
+  }
+  
+  async setDirectDownloadFalse(url: string): Promise<string> {
+    const parsedUrl = new URL(url);
+    parsedUrl.searchParams.set('directDownload', 'false');
+    return parsedUrl.toString();
   }
 }
