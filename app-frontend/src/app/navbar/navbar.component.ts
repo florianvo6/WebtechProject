@@ -28,7 +28,7 @@ export class NavbarComponent {
   }
 
   goToVehicles() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/vehicle']);
     this.alertService.clear();
   }
 
@@ -38,12 +38,13 @@ export class NavbarComponent {
   }
 
   goToProfil() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/profile']);
     this.alertService.clear();
   }
 
   goToWelcome() {
-    this.router.navigate(['/']);
-    this.alertService.clear();
+    this.router.navigate(['/welcome']);
+    this.alertService.success('Successfully logged out! See you soon.')
+    this.alertService.keepAfterRouteChange();
   }
 }

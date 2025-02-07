@@ -71,18 +71,70 @@ app.get('/users', (req, res) => {
         });
 });
 
+app.post('/user/username', async (req, res) => {
+    const { login } = req.body;
+    const text = 'SELECT * FROM users WHERE login = $1';
+
+    const values = [login];
+
+    try {
+        const results = await pool.query(text, values);
+        if (results.rows.length === 0) {
+            return res.status(404).send("User not found.");
+        }
+        return res.status(200).json(results.rows[0]);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send("Error retrieving user.");
+    }
+});
+
+app.post('/user/change', async (req, res) => {
+    const { login, password, name, email, address, currentUser  } = req.body.payload;
+   
+    // Validate the input
+    if (!login || !password || !name || !email || !address || !currentUser ) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    const userCheckText = 'SELECT * FROM users WHERE login = $1';
+    const userCheckValues = [ currentUser ];
+
+    try {
+        const userCheckResults = await pool.query(userCheckText, userCheckValues);
+       
+        if (userCheckResults.rows.length === 0) {
+            return res.status(404).json({ message: "User  not found." });
+        }
+
+        const updateText = `UPDATE users SET login = $1, password = $2, name = $3, email = $4, address = $5 WHERE login = $6 RETURNING *;`;
+        const updateValues = [login, password, name, email, address, currentUser ];
+        console.log('Update values:', updateValues);
+
+        const updateResults = await pool.query(updateText, updateValues);
+       
+        return res.status(200).json({
+            message: "User  settings updated successfully.",
+            user: updateResults.rows[0]
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Error updating user settings." });
+    }
+});
+
 // Endpoint to add a new item
 app.post('/add-marketitem', async (req, res) => {
-    const { title, owner, description, price, address, condition, handover, name, image_url} = req.body;
+    const { title, owner, description, price, address, condition, handover, name, image_id} = req.body;
 
     // Validate input
-    if (!title || !owner || !description || !price || !address || !condition || !handover || !name || !image_url) {
-        console.info(title, owner, description, price, address, condition, handover, name, image_url);
+    if (!title || !owner || !description || !price || !address || !condition || !handover || !name || !image_id) {
+        console.info(title, owner, description, price, address, condition, handover, name, image_id);
         return res.status(400).send({ message: 'All fields are required.' });
     }
 
-    const text = 'INSERT INTO marketitems (title, owner, description, price, address, condition, handover, name, image_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)';
-    const values = [title, owner, description, price, address, condition, handover, name, image_url];
+    const text = 'INSERT INTO marketitems (title, owner, description, price, address, condition, handover, name, image_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)';
+    const values = [title, owner, description, price, address, condition, handover, name, image_id];
 
     try {
         await pool.query(text, values);
@@ -129,15 +181,15 @@ app.post('/marketitem/id', async (req, res) => {
 });
 
 app.post('/add-real-estate', async (req, res) => {
-    const { owner, name, address, title, description, price, type, size, rooms, selltype, image_url} = req.body;
+    const { owner, name, address, title, description, price, type, size, rooms, selltype, image_id} = req.body;
 
     // Validate input
-    if (!owner || !name || !address || !title || !description || !price || !type || !size || !rooms || !selltype || !image_url) {
+    if (!owner || !name || !address || !title || !description || !price || !type || !size || !rooms || !selltype || !image_id) {
         return res.status(400).send({ message: 'All fields are required.' });
     }
 
-    const text = 'INSERT INTO immoitems (owner, name, address, title, description, price, type, size, rooms, selltype, image_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)';
-    const values = [owner, name, address, title, description, price, type, size, rooms, selltype, image_url];
+    const text = 'INSERT INTO immoitems (owner, name, address, title, description, price, type, size, rooms, selltype, image_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)';
+    const values = [owner, name, address, title, description, price, type, size, rooms, selltype, image_id];
 
     try {
         await pool.query(text, values);
@@ -167,6 +219,59 @@ app.get('/real-estate', async (req, res) => {
 app.post('/real-estate/id', async (req, res) => {
     const { id } = req.body;
     const text = 'SELECT * FROM immoitems WHERE id = $1';
+
+    const values = [id];
+
+    try {
+        const results = await pool.query(text, values);
+        if (results.rows.length === 0) {
+            return res.status(404).send("Item not found.");
+        }
+        return res.status(200).json(results.rows[0]);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send("Error retrieving item.");
+    }
+});
+
+app.get('/vehicle', async (req, res) => {
+    const query = 'SELECT * FROM vehicles';
+
+    try {
+        const results = await pool.query(query);
+        if (results.rows.length === 0) {
+            return res.status(404).send({ message: 'No items found.' });
+        }
+        return res.status(200).json(results.rows);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({ message: "Error retrieving items." });
+    }
+});
+
+app.post('/add-vehicle', async (req, res) => {
+    const { owner, name, address, title, description, price, brand, mileage, initialapproval, image_id} = req.body.payload;
+
+    // Validate input
+    if (!owner || !name || !address || !title || !description || !price || !brand || !mileage || !initialapproval || !image_id) {
+        return res.status(400).send({ message: 'All fields are required.' });
+    }
+
+    const text = 'INSERT INTO vehicles (owner, name, address, title, description, price, brand, mileage, initialapproval, image_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)';
+    const values = [owner, name, address, title, description, price, brand, mileage, initialapproval, image_id];
+
+    try {
+        await pool.query(text, values);
+        return res.status(201).send({ message: 'Item added successfully!' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({ message: 'Error adding item. Please try again later.' });
+    }
+});
+
+app.post('/vehicle/id', async (req, res) => {
+    const { id } = req.body;
+    const text = 'SELECT * FROM vehicles WHERE id = $1';
 
     const values = [id];
 

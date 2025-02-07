@@ -42,8 +42,8 @@ export class ImageService {
     });
 
     const params = new HttpParams()
-        .set('downloadType', 'preview') // or 'custom', 'preview', etc.
-        .set('responseType', 'path'); // or 'directlink', depending on your needs
+        .set('downloadType', 'preview') 
+        .set('responseType', 'path');
 
     return this.http.get(url, { headers, params });
 }

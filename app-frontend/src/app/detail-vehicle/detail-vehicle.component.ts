@@ -1,21 +1,21 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { NavbarComponent } from '../navbar/navbar.component';
-import { FormsModule } from '@angular/forms';
-import { AlertComponent } from '../alert/alert.component';
 import { Alert } from '../services/models/alert-type';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../services/alert-service/alert.service';
+import { CommonModule } from '@angular/common';
+import { NavbarComponent } from '../navbar/navbar.component';
+import { FormsModule } from '@angular/forms';
+import { AlertComponent } from '../alert/alert.component';
 
 @Component({
-  selector: 'app-detail-real-estate',
-  imports: [CommonModule, NavbarComponent, FormsModule, CommonModule, AlertComponent],
-  templateUrl: './detail-real-estate.component.html',
-  styleUrl: './detail-real-estate.component.css'
+  selector: 'app-detail-vehicle',
+  imports: [CommonModule, NavbarComponent, FormsModule, AlertComponent],
+  templateUrl: './detail-vehicle.component.html',
+  styleUrl: './detail-vehicle.component.css'
 })
-export class DetailRealEstateComponent {
-  item: any;
+export class DetailVehicleComponent {
+item: any;
   id: number | undefined;
   showMessageInput: boolean = false;
   messageText: string = '';
@@ -41,7 +41,7 @@ export class DetailRealEstateComponent {
 
   getData(id: number): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.http.post('http://localhost:8000/real-estate/id', { id: this.id })
+      this.http.post('http://localhost:8000/vehicle/id', { id: this.id })
       .subscribe(
         (response: any) => {
           this.item = response;
@@ -49,7 +49,7 @@ export class DetailRealEstateComponent {
           resolve();
         },
         (error) => {
-          console.error('Error fetching products:', error);
+          console.error('Error fetching vehicles:', error);
           reject(error);
         }
       );

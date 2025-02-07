@@ -23,6 +23,7 @@ export class DetailItemComponent {
   recipient: string | null = '';
   title: string | null = '';
   alert: Alert | null = null;
+  imageUrl: string | null = '';
 
   constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, private alertService: AlertService) {
   }
@@ -30,6 +31,7 @@ export class DetailItemComponent {
   ngOnInit() {
     this.route.params.subscribe(async params => {
       this.id = +params['id'];
+      this.imageUrl = params['url'];
       this.sender = localStorage.getItem('username');
       await this.getData(this.id);
       this.recipient = this.item.owner;

@@ -11,6 +11,10 @@ import { AddRealEstateComponent } from './add-real-estate/add-real-estate.compon
 import { ChatComponent } from './chat/chat.component';
 import { DetailChatComponent } from './detail-chat/detail-chat.component';
 import { DetailRealEstateComponent } from './detail-real-estate/detail-real-estate.component';
+import { VehicleComponent } from './vehicle/vehicle.component';
+import { AddVehicleComponent } from './add-vehicle/add-vehicle.component';
+import { ProfileComponent } from './profile/profile.component';
+import { DetailVehicleComponent } from './detail-vehicle/detail-vehicle.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -19,12 +23,16 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'marketplace', component: MarketplaceComponent },
   { path: 'add-market-item', component: AddMarketplaceComponent },
-  { path: 'product-detail/:id', component: DetailItemComponent },
+  { path: 'product-detail/:id/:url', component: DetailItemComponent },
   { path: 'real-estate', component: RealEstateComponent },
   { path: 'add-real-estate-item', component: AddRealEstateComponent },
-  { path: 'real-estate-detail/:id', component: DetailRealEstateComponent },
+  { path: 'real-estate-detail/:id/:url', component: DetailRealEstateComponent },
+  { path: 'vehicle', component: VehicleComponent },
+  { path: 'add-vehicle', component: AddVehicleComponent },
+  { path: 'vehicle-detail/:id/:url', component: DetailVehicleComponent },
   { path: 'inbox', component: ChatComponent },
   { path: 'chat-detail/:id', component: DetailChatComponent },
+  { path: 'profile', component: ProfileComponent },
   { path: '', redirectTo: '/welcome', pathMatch: 'full' },
   { path: '**', redirectTo: '/welcome' } 
 ];

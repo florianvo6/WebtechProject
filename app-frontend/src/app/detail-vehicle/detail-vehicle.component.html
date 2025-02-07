@@ -34,20 +34,16 @@
                         <p class="card-text border-bottom pb-2"> {{ item.description }} </p>
                         <h5 class="mt-2">Details</h5>
                         <p class="card-text">
-                            <img src="assets/type.png" alt="Type Icon" class="icon" />
-                            <strong>Type:</strong> {{ item.type }}
+                            <img src="assets/brand.png" alt="Brand Icon" class="icon" />
+                            <strong>Brand:</strong> {{ item.brand }}
                         </p>
                         <p class="card-text">
-                            <img src="assets/selltype.png" alt="Selltype Icon" class="icon" />
-                            <strong>Selltype:</strong> {{ item.selltype }}
-                        </p>
-                        <p class="card-text">
-                            <img src="assets/size.png" alt="Size Icon" class="icon" />
-                            <strong>Size:</strong> {{ item.size }}
+                            <img src="assets/approval.png" alt="Initialapproval Icon" class="icon" />
+                            <strong>Initial Approval:</strong> {{ item.initialapproval }}
                         </p>
                         <p class="card-text mb-4">
-                            <img src="assets/rooms.png" alt="Rooms Icon" class="icon" />
-                            <strong>Rooms:</strong> {{ item.rooms }}
+                            <img src="assets/mileage.png" alt="Mileage Icon" class="icon" />
+                            <strong>Mileage:</strong> {{ item.mileage }} miles
                         </p>
                         <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" style="background-color: #7C8399; color: white; border: none;" (click)="toggleMessageInput()">Send Request</button>
                         <div *ngIf="showMessageInput">

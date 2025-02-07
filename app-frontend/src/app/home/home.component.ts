@@ -24,6 +24,6 @@ export class HomeComponent {
   }
 
   goToVehicles() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/vehicle']);
   }
 }

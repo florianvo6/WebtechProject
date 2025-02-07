@@ -25,9 +25,8 @@ export class AddMarketplaceComponent {
   condition: string = '';
   handover: string = '';
   name: string = '';
-  imageUrl: string = '';
+  image_id: number | null = null;
 
-  imageId: number | null = null;
   jobId: number | null = null;
   selectedFile: File | null = null;
   alert: Alert | null = null;
@@ -53,7 +52,7 @@ export class AddMarketplaceComponent {
   }
 
   async addItem(): Promise<void>{
-    this.http.post('http://localhost:8000/add-marketitem', { title: this.title,  owner: this.owner, description: this.description, price: this.price, address: this.address, condition: this.condition, handover: this.handover, name: this.name, image_url: this.imageUrl})
+    this.http.post('http://localhost:8000/add-marketitem', { title: this.title,  owner: this.owner, description: this.description, price: this.price, address: this.address, condition: this.condition, handover: this.handover, name: this.name, image_id: this.image_id})
       .subscribe(
         (response: any) => {
           console.log(response);
@@ -71,11 +70,11 @@ export class AddMarketplaceComponent {
   }
 
   goToProfil() {
-    this.router.navigate(['/profil']);
+    this.router.navigate(['/profile']);
   }
 
   goToMarketplace() {
-    this.router.navigate(['/marketplace']);
+    this.router.navigate(['/add-market-item']);
   }
 
   onFileSelected(event: Event): void {
@@ -116,10 +115,10 @@ async retrieveImageData(): Promise<void> {
                   const finishedJobData = response.job.finishedJobData;
 
                   if (finishedJobData) {
-                      this.imageId = finishedJobData.fileID;
-                      await this.retrieveImage();
-                      console.log('Image ID:', this.imageId);
-                      return;
+                    this.image_id = finishedJobData.fileID;
+                    console.log('Image ID:', this.image_id);
+                    await this.addItem();
+                    return;
                   } else {
                       console.warn('Finished job data is null. Retrying...');
                   }
@@ -136,28 +135,5 @@ async retrieveImageData(): Promise<void> {
 
       console.error('Max attempts reached. Job may not be finished or there was an error.');
   }
-}
-
-async retrieveImage(): Promise<void> {
-  if (this.imageId) {
-      try {
-          const response = await firstValueFrom(this.imageService.downloadImage(this.imageId.toString()));
-          if (response.success) {
-              this.imageUrl = await this.setDirectDownloadFalse(response.downloadURL); 
-              console.log('Image URL:', this.imageUrl);
-              await this.addItem();
-          } else {
-              console.error('Failed to retrieve image URL:', response);
-          }
-      } catch (error) {
-          console.error('Error downloading image:', error);
-      }
-  }
-}
-
-async setDirectDownloadFalse(url: string): Promise<string> {
-  const parsedUrl = new URL(url);
-  parsedUrl.searchParams.set('directDownload', 'false');
-  return parsedUrl.toString();
 }
 }
