@@ -1,0 +1,151 @@
+<app-navbar></app-navbar>
+<div style="width: 965px;" class="mx-auto">
+    <app-alert></app-alert>
+</div>
+<div class="modal-container">
+    <br/>
+    <h1 class="pb-2 border-bottom text-white">Profile</h1>
+   
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="modal modal-sheet position-static d-block py-md-3" tabindex="-1" role="dialog" id="modalSignin">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content rounded-4 shadow">
+                        <div class="modal-header p-5 pb-4 border-bottom-0">
+                        <h1 class="fw-bold mb-0 fs-2 text-center">Settings</h1>
+                        </div>
+               
+                        <div class="modal-body p-5 pt-0">
+                        <form (ngSubmit)="onSubmit()" #profileForm="ngForm">
+                            <div class="form-floating mb-3">
+                            <input type="text" class="form-control rounded-3" id="loginInput" placeholder="MaxMuster99" [(ngModel)]="user.login" name="login" required>
+                            <label for="floatingInput">Username</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control rounded-3" id="mailInput" placeholder="max.muster@example.com" [(ngModel)]="user.email" name="email" required>
+                                <label for="floatingInput">E-Mail</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control rounded-3" id="nameInput" placeholder="Max" [(ngModel)]="user.name" name="name" required>
+                                <label for="floatingInput">First name</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                            <input type="password" class="form-control rounded-3" id="passInput" placeholder="Password" [(ngModel)]="user.password" name="password" required>
+                            <label for="floatingPassword">Password</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control rounded-3" id="addressInput" placeholder="Examplestreet 99, 9900 Example" [(ngModel)]="user.address" name="address" required>
+                                <label for="floatingInput">Address</label>
+                            </div>
+                            <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" style="background-color: #7C8399; color: white; border: none;" type="submit" [disabled]="!profileForm.valid">Save Changes</button>
+                            <hr class="mt-4 mb-2">
+                            <small class="text-body-secondary">If you click on <strong>Save Changes</strong> you will be redirected to the Login page.</small>
+                        </form>
+                        </div>
+                        <div class="modal-header p-5 pb-3 border-bottom-0">
+                            <h1 class="fw-bold mb-0 fs-2 text-center">Inbox</h1>
+                        </div>
+                        <div class="modal-body p-5 pt-0">
+                            <p class="text-start">Here you can find your current chats with sellers and interested parties.</p>
+                            <button class="w-100 my-2 btn btn-lg rounded-3 btn-primary" style="background-color: #7C8399; color: white; border: none;" (click)="navigateToInboxPage()">Go To Inbox</button>
+                            <hr class="mt-4 mb-2">
+                            <small class="text-body-secondary">If you click on <strong>Go To Inbox</strong> you will be redirected to the Inbox page.</small>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="custom-modal py-md-4">
+                    <div class="modal-header">
+                        <h1 class="fw-bold mb-0 fs-3 mt-4 ms-4 text-center">Your Offers</h1>
+                    </div>
+                    <div class="modal-body">
+                        <div class="d-flex justify-content-between bor">
+                        <h5 class="text-start ms-2">Marketplace</h5><button type="button" class="btn btn-primary btn-sm my-3 my-sm-0 me-2" style="background-color: #7C8399; color: white; border: none;" (click)="navigateToAddMarketItemPage()">Add New</button>
+                        </div>
+                        <div *ngIf="marketplaceData && marketplaceData.length > 0; else noMarketPlaceData">
+                            <div class="py-2 px-2">
+                              <div>
+                                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                                  <div *ngFor="let item of marketplaceData" class="col mb-1 hover-effect" (click)="navigateToDetailPage(item.id)">
+                                    <div class="card shadow-sm align-items-center" style="height: 245px;">
+                                        <img src="assets/edit.png" alt="Edit" class="edit-icon" (click)="editMarketItem(item.id)" />
+                                        <img src="assets/remove.png" alt="Delete" class="delete-icon" (click)="delteMarketItem(item.id)" />
+                                        <img class="card-img-top mt-4 border" [src]="item.imageUrl" style="width: 170px; height: 130px; max-height: 130px;" />
+                                        <div class="card-body d-flex flex-column">
+                                        <h6>{{item.title}} - {{item.price}} €</h6>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm my-3 my-sm-0 me-2 custom-btn" (click)="markItemAsSold(item.id)">Mark As Sold</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <ng-template #noMarketPlaceData>
+                            <div class="text-center transpar">
+                                <p>No marketplace offers available! You can add new offers by using the add button.</p>
+                            </div>
+                        </ng-template>
+                        <div class="d-flex justify-content-between bor">
+                            <h5 class="text-start ms-2">Real Estate</h5><button type="button" class="btn btn-primary btn-sm my-3 my-sm-0 me-2" style="background-color: #7C8399; color: white; border: none;" (click)="navigateToAddRealEstateItemPage()">Add New</button>
+                        </div>
+                        <div *ngIf="realEstateData && realEstateData.length > 0; else noRealEstateData">
+                            <div class="py-2 px-2">
+                              <div>
+                                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                                  <div *ngFor="let item of realEstateData" class="col mb-1 hover-effect" (click)="navigateToDetailPage(item.id)">
+                                    <div class="card shadow-sm align-items-center" style="height: 245px;">
+                                        <img src="assets/edit.png" alt="Edit" class="edit-icon" (click)="editRealEstate(item.id)" />
+                                        <img src="assets/remove.png" alt="Delete" class="delete-icon" (click)="deleteRealEstate(item.id)" />
+                                        <img class="card-img-top mt-4 border" [src]="item.imageUrl" style="width: 170px; height: 130px; max-height: 130px;"  />
+                                        <div class="card-body d-flex flex-column">
+                                        <h6>{{item.title}} - {{item.price}} €</h6>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm my-3 my-sm-0 me-2 custom-btn" (click)="markRealEstateAsSold(item.id)">Mark As Sold</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <ng-template #noRealEstateData>
+                            <div class="text-center transpar">
+                                <p>No real estate offers available! You can add new offers by using the add button.</p>
+                            </div>
+                        </ng-template>
+                        <div class="d-flex justify-content-between bor">
+                            <h5 class="text-start ms-2">Vehicle</h5><button type="button" class="btn btn-primary btn-sm my-3 my-sm-0 me-2" style="background-color: #7C8399; color: white; border: none;" (click)="navigateToAdVehicleItemPage()">Add New</button>
+                        </div>
+                        <div *ngIf="vehicleData && vehicleData.length > 0; else noVehicleData">
+                            <div class="py-2 px-2">
+                              <div>
+                                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                                  <div *ngFor="let item of vehicleData" class="col mb-1 hover-effect" (click)="navigateToDetailPage(item.id)">
+                                    <div class="card shadow-sm align-items-center" style="height: 245px;">
+                                        <img src="assets/edit.png" alt="Edit" class="edit-icon" (click)="editVehicle(item.id)" />
+                                        <img src="assets/remove.png" alt="Delete" class="delete-icon" (click)="deleteVehicle(item.id)" />
+                                        <img class="card-img-top mt-4 border" [src]="item.imageUrl" style="width: 170px; height: 130px; max-height: 130px"  />
+                                        <div class="card-body d-flex flex-column">
+                                        <h6>{{item.title}} - {{item.price}} €</h6>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm my-3 my-sm-0 me-2 custom-btn" (click)="markVehicleAsSold(item.id)">Mark As Sold</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <ng-template #noVehicleData>
+                            <div class="text-center transpar">
+                                <p>No vehicle offers available! You can add new offers by using the add button.</p>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

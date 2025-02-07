@@ -1,22 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { AlertService } from '../services/alert-service/alert.service';
 import { CommonModule } from '@angular/common';
 import { AlertComponent } from '../alert/alert.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { ImageService } from '../services/image-service/image.service';
 
 @Component({
-  selector: 'app-real-estate',
+  selector: 'app-vehicle',
   imports: [CommonModule, AlertComponent, NavbarComponent, FormsModule],
-  templateUrl: './real-estate.component.html',
-  styleUrl: './real-estate.component.css'
+  templateUrl: './vehicle.component.html',
+  styleUrl: './vehicle.component.css'
 })
-export class RealEstateComponent {
-
+export class VehicleComponent {
   data: any[] = [];
   owner: string | null = null;
   searchTerm: string = '';
@@ -33,7 +32,7 @@ export class RealEstateComponent {
 
   getProducts(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.http.get('http://localhost:8000/real-estate').subscribe(
+      this.http.get('http://localhost:8000/vehicle').subscribe(
         (response: any) => {
           // Filter products based on owner
           this.data = response.filter((product: any) => product.owner !== this.owner);
@@ -47,20 +46,22 @@ export class RealEstateComponent {
     });
   }
 
-  async filterData (type: string, selltype: string) {
+  async filterData (brand: string, initialapproval: string) {
     await this.getProducts();
 
     try {
-      if (type && !selltype) {
-        this.data = this.data.filter(item => type === item.type);
+      const initialApprovalNumber = initialapproval ? +initialapproval : null;
+
+      if (brand && !initialApprovalNumber) {
+        this.data = this.data.filter(item => brand === item.brand);
         await this.saveImgUrl(this.data);
       }
-      else if (!type && selltype) {
-        this.data = this.data.filter(item => selltype === item.handover);
+      else if (!brand && initialApprovalNumber) {
+        this.data = this.data.filter(item => initialApprovalNumber === item.initialapproval);
         await this.saveImgUrl(this.data);
       }
-      else if (type && selltype) {
-        this.data = this.data.filter(item => type === item.type && selltype === item.selltype);
+      else if (brand && initialApprovalNumber) {
+        this.data = this.data.filter(item => brand === item.brand && initialApprovalNumber === item.initialapproval);
         await this.saveImgUrl(this.data);
       }
     }
@@ -76,6 +77,8 @@ export class RealEstateComponent {
         this.data = this.data.filter(item =>
             item.title.toLowerCase().includes(normalizedSearchTerm)
         );
+
+        await this.saveImgUrl(this.data);
   }
 
   async getImageUrl(imageId: string): Promise<string> {
@@ -121,11 +124,11 @@ export class RealEstateComponent {
   }
 
   public navigateToAddPage() {
-    this.router.navigate(['/add-real-estate-item']);
+    this.router.navigate(['/add-vehicle']);
   }
 
   public navigateToDetailPage(id: number, url: string) {
-    this.router.navigate(['/real-estate-detail', id, url]);
+    this.router.navigate(['/vehicle-detail', id, url]);
   }
 
   gotoButtonClicked(event: MouseEvent) {

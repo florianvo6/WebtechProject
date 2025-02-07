@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AlertComponent } from '../alert/alert.component';
 
 @Component({
   selector: 'app-welcome',
-  imports: [],
+  imports: [AlertComponent],
   templateUrl: './welcome.component.html',
   styleUrl: './welcome.component.css'
 })

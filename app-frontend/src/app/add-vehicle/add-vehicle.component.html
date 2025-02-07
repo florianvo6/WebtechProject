@@ -1,0 +1,83 @@
+<app-navbar></app-navbar>
+<div style="width: 860px;" class="mx-auto">
+    <app-alert></app-alert>
+</div>
+<div class="modal-container w-50">
+    <br/>
+    <h1 class="pb-2 border-bottom text-white">Vehicle Offer</h1>
+   
+    <div class="modal modal-sheet position-static d-block p-4 py-md-3" tabindex="-1" role="dialog" id="modalSignin">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-header p-5 pb-4 border-bottom-0">
+                    <h1 class="fw-bold mb-0 fs-2 text-center">Add Vehicle</h1>
+                </div>
+   
+                <div class="modal-body p-5 pt-0">
+                    <form (ngSubmit)="onUpload()" #registrationForm="ngForm">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control rounded-3" id="titleInput" placeholder="Title" [(ngModel)]="vehicleItem.title" name="title" required>
+                            <label for="titleInput">Title</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="file" class="form-control rounded-3" (change)="onFileSelected($event)" accept="image/*" id="imageInput" placeholder="Image" name="image" required>
+                            <label for="ImageInput">Image</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control rounded-3" id="descriptionInput" placeholder="Description" [(ngModel)]="vehicleItem.description" name="description" required></textarea>
+                            <label for="descriptionInput">Description</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control rounded-3" id="priceInput" placeholder="99€" [(ngModel)]="vehicleItem.price" name="price" required>
+                            <label for="priceInput">Price</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-select rounded-3" id="brandInput" [(ngModel)]="vehicleItem.brand" name="brand" required>
+                                <option value="" disabled selected>Select Brand</option>
+                                <option value="Toyota">Toyota</option>
+                                <option value="Volkswagen">Volkswagen</option>
+                                <option value="Ford">Ford</option>
+                                <option value="Honda">Honda</option>
+                                <option value="Chevrolet">Chevrolet</option>
+                                <option value="Nissan">Nissan</option>
+                                <option value="Hyundai">Hyundai</option>
+                                <option value="Kia">Kia</option>
+                                <option value="Subaru">Subaru</option>
+                                <option value="Mercedes-Benz">Mercedes-Benz</option>
+                                <option value="BMW">BMW</option>
+                                <option value="Audi">Audi</option>
+                                <option value="Lexus">Lexus</option>
+                                <option value="Mazda">Mazda</option>
+                                <option value="Dodge">Dodge</option>
+                                <option value="Chrysler">Chrysler</option>
+                                <option value="Jeep">Jeep</option>
+                                <option value="Buick">Buick</option>
+                                <option value="Porsche">Porsche</option>
+                                <option value="Land Rover">Land Rover</option>
+                                <option value="Volvo">Volvo</option>
+                                <option value="Tesla">Tesla</option>
+                                <option value="Mitsubishi">Mitsubishi</option>
+                                <option value="Infiniti">Infiniti</option>
+                                <option value="Acura">Acura</option>
+                                <option value="Mini">Mini</option>
+                                <option value="Fiat">Fiat</option>
+                            </select>
+                            <label for="brandInput">Brand</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control rounded-3" id="initialApprovalInput" placeholder="99€" [(ngModel)]="vehicleItem.initialApproval" name="initialApproval" required>
+                            <label for="initialApprovalInput">Initial Approval</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control rounded-3" id="mileageInput" placeholder="99" [(ngModel)]="vehicleItem.mileage" name="mileage" required>
+                            <label for="mileageInput">Mileage</label>
+                        </div>
+                        <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" style="background-color: #7C8399; color: white; border: none;" type="submit" [disabled]="!registrationForm.valid">Add Vehicle</button>
+                        <hr class="mt-4 mb-2">
+                        <small class="text-body-secondary">You can check your own items by visiting your profile. <a href="#" (click)="goToProfil(); $event.preventDefault();" class="custom-link">here</a></small>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
