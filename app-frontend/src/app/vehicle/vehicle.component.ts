@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { ImageService } from '../services/image-service/image.service';
+import { VehicleService } from '../services/vehicle-service/vehicle.service';
 
 @Component({
   selector: 'app-vehicle',
@@ -20,34 +21,33 @@ export class VehicleComponent {
   owner: string | null = null;
   searchTerm: string = '';
 
-  constructor(private http: HttpClient, private router: Router, private alertService: AlertService, private imageService: ImageService) { }
+  constructor(private http: HttpClient, private router: Router, private alertService: AlertService, private imageService: ImageService, private vehicleService: VehicleService) { }
 
   async ngOnInit() {
     this.alertService.clear();
     this.owner = localStorage.getItem('username');
 
-    await this.getProducts();
+    await this.getVehicles();
     await this.saveImgUrl(this.data);
   }
 
-  getProducts(): Promise<void> {
+  getVehicles(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.http.get('http://localhost:8000/vehicle').subscribe(
-        (response: any) => {
-          // Filter products based on owner
-          this.data = response.filter((product: any) => product.owner !== this.owner);
-          resolve();
-        },
-        (error) => {
-          console.error('Error fetching products:', error);
-          reject(error);
-        }
+      this.vehicleService.getVehicles(this.owner!, false).subscribe(
+          (data: any) => {
+              this.data = data;
+              resolve();
+          },
+          (error) => {
+              console.error('Error fetching products:', error);
+              reject(error);
+          }
       );
-    });
-  }
+  });
+}
 
   async filterData (brand: string, initialapproval: string) {
-    await this.getProducts();
+    await this.getVehicles();
 
     try {
       const initialApprovalNumber = initialapproval ? +initialapproval : null;
@@ -71,7 +71,7 @@ export class VehicleComponent {
   }
 
   async searchData () {
-    await this.getProducts();
+    await this.getVehicles();
     const normalizedSearchTerm = this.searchTerm.trim().toLowerCase();
 
         this.data = this.data.filter(item =>
@@ -119,7 +119,7 @@ export class VehicleComponent {
   }
 
   async resetData() {
-    await this.getProducts();
+    await this.getVehicles();
     await this.saveImgUrl(this.data);
   }
 

@@ -10,6 +10,9 @@ import { AlertService } from '../services/alert-service/alert.service';
 import { ImageService } from '../services/image-service/image.service';
 import { firstValueFrom } from 'rxjs';
 import { createUser, User } from '../models/user';
+import { MarketitemService } from '../services/marketitem-service/marketitem.service';
+import { VehicleService } from '../services/vehicle-service/vehicle.service';
+import { RealestateService } from '../services/realestate-service/realestate.service';
 
 
 @Component({
@@ -26,44 +29,20 @@ export class ProfileComponent {
   vehicleData: any[] = [];
 
 
-  constructor(private userService: UserService, private http: HttpClient, private router: Router, private alertService: AlertService, private imageService: ImageService) {}
+  constructor(private userService: UserService, private http: HttpClient, private router: Router, 
+    private alertService: AlertService, private imageService: ImageService, 
+    private marketitemService: MarketitemService, private vehicleService: VehicleService,
+    private realestateService: RealestateService) {}
 
   async ngOnInit() {
     this.currentUser  = localStorage.getItem('username');
-    console.log(this.currentUser);
     if (this.currentUser ) {
-      await this.getUserData(this.currentUser );
+      await this.getUserData(this.currentUser);
     }
 
     await this.getRealEstate();
-    this.realEstateData.forEach(async item => {
-      await this.getImageUrl(item.image_id).then(url => {
-          item.imageUrl = url;
-      }).catch(error => {
-          console.error(`Error fetching image URL for item ${item.id}:`, error);
-          item.imageUrl = 'assets/real-estate.png';
-      });
-    });
-
     await this.getVehicles();
-    this.vehicleData.forEach(item => {
-      this.getImageUrl(item.image_id).then(url => {
-          item.imageUrl = url;
-      }).catch(error => {
-          console.error(`Error fetching image URL for item ${item.id}:`, error);
-          item.imageUrl = 'assets/real-estate.png';
-      });
-    });
-
-    await this.getMarketplace();
-    this.marketplaceData.forEach(async item => {
-      await this.getImageUrl(item.image_id).then(url => {
-          item.imageUrl = url;
-      }).catch(error => {
-          console.error(`Error fetching image URL for item ${item.id}:`, error);
-          item.imageUrl = 'assets/real-estate.png';
-      });
-    });
+    await this.getProducts();
   }
 
   async getUserData(currentUser: string): Promise<void> {
@@ -138,64 +117,134 @@ export class ProfileComponent {
       return parsedUrl.toString();
     }
 
-  getRealEstate(): Promise<void> {
+  getProducts(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.http.get('http://localhost:8000/real-estate').subscribe(
-        (response: any) => {
-          this.realEstateData = response.filter((product: any) => product.owner == this.currentUser);
-          resolve();
-        },
-        (error) => {
-          console.error('Error fetching products:', error);
-          reject(error);
-        }
-      );
+        this.marketitemService.getMarketItems(this.currentUser!, true).subscribe(
+            (data: any) => {
+                this.marketplaceData = data;
+                this.marketplaceData.forEach(async item => {
+                  await this.getImageUrl(item.image_id).then(url => {
+                      item.imageUrl = url;
+                  }).catch(error => {
+                      console.error(`Error fetching image URL for item ${item.id}:`, error);
+                      item.imageUrl = 'assets/real-estate.png';
+                  });
+                });
+                resolve();
+            },
+            (error) => {
+                console.error('Error fetching products:', error);
+                reject(error);
+            }
+        );
     });
   }
-
-  getMarketplace(): Promise<void> {
+  
+  getRealEstate(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.http.get('http://localhost:8000/marketitems').subscribe(
-        (response: any) => {
-          // Filter products based on owner
-          this.marketplaceData = response.filter((product: any) => product.owner == this.currentUser);
-          resolve();
-        },
-        (error) => {
-          console.error('Error fetching products:', error);
-          reject(error);
-        }
+      this.realestateService.getRealEstate(this.currentUser!, true).subscribe(
+          (data: any) => {
+              this.realEstateData = data;
+              this.realEstateData.forEach(async item => {
+                await this.getImageUrl(item.image_id).then(url => {
+                    item.imageUrl = url;
+                }).catch(error => {
+                    console.error(`Error fetching image URL for item ${item.id}:`, error);
+                    item.imageUrl = 'assets/real-estate.png';
+                });
+              });
+              resolve();
+          },
+          (error) => {
+              console.error('Error fetching products:', error);
+              reject(error);
+          }
       );
     });
   }
 
   getVehicles(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.http.get('http://localhost:8000/vehicle').subscribe(
-        (response: any) => {
-          // Filter products based on owner
-          this.vehicleData = response.filter((product: any) => product.owner == this.currentUser);
-          resolve();
-        },
-        (error) => {
-          console.error('Error fetching products:', error);
-          reject(error);
-        }
+      this.vehicleService.getVehicles(this.currentUser!, true).subscribe(
+          (data: any) => {
+              this.vehicleData = data;
+              this.vehicleData.forEach(item => {
+                this.getImageUrl(item.image_id).then(url => {
+                    item.imageUrl = url;
+                }).catch(error => {
+                    console.error(`Error fetching image URL for item ${item.id}:`, error);
+                    item.imageUrl = 'assets/real-estate.png';
+                });
+              });
+              resolve();
+          },
+          (error) => {
+              console.error('Error fetching products:', error);
+              reject(error);
+          }
       );
     });
   }
 
-  editMarketItem(id: number) {}
+  public navigateToUpdateMarketItem(id: number) {
+    this.router.navigate(['/product-update', id]);
+  }
 
-  editRealEstate(id: number) {}
+  public navigateToUpdateRealEstate(id: number) {
+    this.router.navigate(['/real-estate-update', id]);
+  }
 
-  editVehicle(id: number) {}
+  public navigateToUpdateVehicle(id: number) {
+    this.router.navigate(['/vehicle-update', id]);
+  }
 
-  delteMarketItem(id: number) {}
+  delteMarketItem(id: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+        this.marketitemService.deleteMarketItem(id).subscribe(
+            (response) => {
+                this.alertService.success("Item deleted successfully.")
+                this.getProducts();
+                resolve(); 
+            },
+            (error) => {
+                this.alertService.error("Error: " + error.message)
+                reject(error);
+            }
+        );
+    });
+  }
 
-  deleteVehicle(id: number) {}
+  deleteRealEstate(id: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.realestateService.deleteRealestate(id).subscribe(
+          (response) => {
+              this.alertService.success("Item deleted successfully.")
+              this.getRealEstate();
+              resolve(); 
+          },
+          (error) => {
+              this.alertService.error("Error: " + error.message)
+              reject(error);
+          }
+      );
+    });
+  }
 
-  deleteRealEstate(id: number) {}
+  deleteVehicle(id: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.vehicleService.deleteVehicle(id).subscribe(
+          (response) => {
+              this.alertService.success("Vehicle deleted successfully.")
+              this.getVehicles();
+              resolve(); 
+          },
+          (error) => {
+              this.alertService.error("Error: " + error.message)
+              reject(error);
+          }
+      );
+    });
+  }
 
   markItemAsSold(id: number) {}
 

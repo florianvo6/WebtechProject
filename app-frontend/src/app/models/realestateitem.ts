@@ -1,25 +1,26 @@
 import { Person } from "./person";
 
-//VehicleItem interface
-export interface VehicleItem {
+export interface RealEstateItem {
     title: string;
     description: string;
     price: number | null;
-    brand: string;
-    initialapproval: number | null;
-    mileage: number | null;
+    type: string;
+    selltype: string;
+    size: number | null;
+    rooms: number | null;
     imageId: number | null;
     seller: Person;
 }
 
-export function Create(): VehicleItem {
+export function createRealestateItem (): RealEstateItem {
     return {
         title: '',
         description: '',
         price: null,
-        brand: '',
-        initialapproval: null,
-        mileage: null,
+        type: '',
+        selltype: '',
+        size: null,
+        rooms: null,
         imageId: null,
         seller: {
             owner: '',

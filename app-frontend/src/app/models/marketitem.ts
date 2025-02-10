@@ -1,25 +1,22 @@
 import { Person } from "./person";
 
-//VehicleItem interface
-export interface VehicleItem {
+export interface MarketItem {
     title: string;
     description: string;
     price: number | null;
-    brand: string;
-    initialapproval: number | null;
-    mileage: number | null;
+    condition: string;
+    handover: string;
     imageId: number | null;
     seller: Person;
 }
 
-export function Create(): VehicleItem {
+export function createMarketItem (): MarketItem {
     return {
         title: '',
         description: '',
         price: null,
-        brand: '',
-        initialapproval: null,
-        mileage: null,
+        condition: '',
+        handover: '',
         imageId: null,
         seller: {
             owner: '',

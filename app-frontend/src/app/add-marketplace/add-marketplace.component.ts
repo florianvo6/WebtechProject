@@ -9,6 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { Alert } from '../services/models/alert-type';
 import { ImageService } from '../services/image-service/image.service';
 import { firstValueFrom } from 'rxjs';
+import { createMarketItem, MarketItem } from '../models/marketitem';
+import { MarketitemService } from '../services/marketitem-service/marketitem.service';
 
 @Component({
   selector: 'app-add-marketplace',
@@ -17,21 +19,12 @@ import { firstValueFrom } from 'rxjs';
   styleUrl: './add-marketplace.component.css'
 })
 export class AddMarketplaceComponent {
-  title: string = '';
-  owner: string = '';
-  description: string = '';
-  price: number | null = null;
-  address: string = '';
-  condition: string = '';
-  handover: string = '';
-  name: string = '';
-  image_id: number | null = null;
-
+  marketItem: MarketItem = createMarketItem();
   jobId: number | null = null;
   selectedFile: File | null = null;
   alert: Alert | null = null;
 
-  constructor(private imageService: ImageService, private http: HttpClient, private router: Router, private alertService: AlertService) { }
+  constructor(private imageService: ImageService, private http: HttpClient, private router: Router, private alertService: AlertService, private marketitemService: MarketitemService) { }
  
   ngOnInit() {
     this.alertService.clear();
@@ -39,59 +32,52 @@ export class AddMarketplaceComponent {
     const storedName = localStorage.getItem('name');
     const storedAddress = localStorage.getItem('address');
     if (storedUsername) {
-        this.owner = storedUsername;
+        this.marketItem.seller.owner = storedUsername;
     }
 
     if (storedName) {
-        this.name = storedName;
+        this.marketItem.seller.name = storedName;
     }
 
     if (storedAddress) {
-      this.address = storedAddress;
+      this.marketItem.seller.address = storedAddress;
     }
   }
 
-  async addItem(): Promise<void>{
-    this.http.post('http://localhost:8000/add-marketitem', { title: this.title,  owner: this.owner, description: this.description, price: this.price, address: this.address, condition: this.condition, handover: this.handover, name: this.name, image_id: this.image_id})
-      .subscribe(
+  async addItem(): Promise<void> {
+    const payload = {
+      owner: this.marketItem.seller.owner,
+      name: this.marketItem.seller.name,
+      address: this.marketItem.seller.address,
+      title: this.marketItem.title,
+      description: this.marketItem.description,
+      price: this.marketItem.price,
+      condition: this.marketItem.condition,
+      handover: this.marketItem.handover,
+      image_id: this.marketItem.imageId,
+    };
+
+    this.marketitemService.addMarketItem(payload).subscribe(
         (response: any) => {
-          console.log(response);
-          if (response && response.message) {
-            this.alertService.success('Item added successfully!');
-          } else {
-            this.alertService.error('Failed to add item. Please try again.');
-          }
+            if (response && response.message) {
+                this.alertService.success('Item added successfully!');
+            } else {
+                this.alertService.error('Failed to add item. Please try again.');
+            }
         },
         (error) => {
-          this.alertService.error("Failed to add item! " + error.error.message + " Please try again.");
-          console.error('Error response:', error);
+            this.alertService.error("Failed to add item! " + error.error.message + " Please try again.");
+            console.error('Error response:', error);
         }
-      );
-  }
-
-  goToProfil() {
-    this.router.navigate(['/profile']);
-  }
-
-  goToMarketplace() {
-    this.router.navigate(['/add-market-item']);
-  }
-
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-        this.selectedFile = input.files[0];
-    }
+    );
   }
 
   async onUpload(): Promise<void> {
     if (this.selectedFile) {
         try {
             const response = await firstValueFrom(this.imageService.uploadImage(this.selectedFile));
-            console.log('Upload successful:', response);
             this.jobId = response.jobID;
             await this.retrieveImageData();
-            this.goToMarketplace()
         } catch (error) {
             console.error('Upload failed:', error);
             this.alertService.error('Upload failed!');
@@ -99,6 +85,13 @@ export class AddMarketplaceComponent {
     } else {
         this.alertService.error('Please select a file first.');
     }
+}
+
+onFileSelected(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+  }
 }
 
 async retrieveImageData(): Promise<void> {
@@ -110,14 +103,20 @@ async retrieveImageData(): Promise<void> {
       while (attempts < maxAttempts) {
           try {
               const response = await firstValueFrom(this.imageService.getJobDetails(this.jobId.toString()));
-              console.log('Job details:', response);
+              
               if (response.success) {
                   const finishedJobData = response.job.finishedJobData;
 
                   if (finishedJobData) {
-                    this.image_id = finishedJobData.fileID;
-                    console.log('Image ID:', this.image_id);
+                    this.marketItem.imageId = finishedJobData.fileID;
                     await this.addItem();
+
+                    this.marketItem = createMarketItem();
+                    const inputElement = document.getElementById('imageInput') as HTMLInputElement;
+                    
+                    if (inputElement) {
+                      inputElement.value = '';
+                    }
                     return;
                   } else {
                       console.warn('Finished job data is null. Retrying...');
@@ -136,4 +135,8 @@ async retrieveImageData(): Promise<void> {
       console.error('Max attempts reached. Job may not be finished or there was an error.');
   }
 }
+
+  goToProfil() {
+    this.router.navigate(['/profile']);
+  }
 }

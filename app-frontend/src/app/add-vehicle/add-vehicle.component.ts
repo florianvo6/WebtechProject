@@ -10,6 +10,7 @@ import { AlertComponent } from '../alert/alert.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { VehicleService } from '../services/vehicle-service/vehicle.service';
 
 @Component({
   selector: 'app-add-vehicle',
@@ -24,7 +25,7 @@ export class AddVehicleComponent {
   selectedFile: File | null = null;
   alert: Alert | null = null;
 
-  constructor(private imageService: ImageService, private http: HttpClient, private router: Router, private alertService: AlertService) { }
+  constructor(private imageService: ImageService, private http: HttpClient, private router: Router, private alertService: AlertService, private vehicleService: VehicleService) { }
  
   ngOnInit() {
     this.alertService.clear();
@@ -44,7 +45,7 @@ export class AddVehicleComponent {
     }
   }
 
-  async addItem(): Promise<void> {
+  async addVehicle(): Promise<void> {
     let payload = {
       owner: this.vehicleItem.seller.owner,
       name: this.vehicleItem.seller.name,
@@ -53,33 +54,30 @@ export class AddVehicleComponent {
       description: this.vehicleItem.description,
       price: this.vehicleItem.price,
       brand: this.vehicleItem.brand,
-      initialapproval: this.vehicleItem.initialApproval,
+      initialapproval: this.vehicleItem.initialapproval,
       mileage: this.vehicleItem.mileage,
       image_id: this.vehicleItem.imageId
     };
 
-    this.http.post('http://localhost:8000/add-vehicle', { payload })
-      .subscribe(
-        (response: any) => {
-          console.log(response);
+    this.vehicleService.addVehicle(payload).subscribe(
+      (response: any) => {
           if (response && response.message) {
-            this.alertService.success('Item added successfully!');
+              this.alertService.success('Vehicle added successfully!');
           } else {
-            this.alertService.error('Failed to add item. Please try again.');
+              this.alertService.error('Failed to add vehicle. Please try again.');
           }
-        },
-        (error) => {
-          this.alertService.error("Failed to add item! " + error.error.message + " Please try again.");
+      },
+      (error) => {
+          this.alertService.error("Failed to add vehicle! " + error.error.message + " Please try again.");
           console.error('Error response:', error);
-        }
-      );
+      }
+    );
   }
  
   async onUpload(): Promise<void> {
     if (this.selectedFile) {
         try {
             const response = await firstValueFrom(this.imageService.uploadImage(this.selectedFile));
-            console.log('Upload successful:', response);
             this.jobId = response.jobID;
             await this.retrieveImageData();
         } catch (error) {
@@ -88,6 +86,13 @@ export class AddVehicleComponent {
         }
     } else {
         this.alertService.error('Please select a file first.');
+    }
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+        this.selectedFile = input.files[0];
     }
   }
  
@@ -100,16 +105,17 @@ export class AddVehicleComponent {
         while (attempts < maxAttempts) {
             try {
                 const response = await firstValueFrom(this.imageService.getJobDetails(this.jobId.toString()));
-                console.log('Job details:', response);
+                
                 if (response.success) {
                     const finishedJobData = response.job.finishedJobData;
  
                     if (finishedJobData) {
                         this.vehicleItem.imageId = finishedJobData.fileID.toString();
-                        console.log('Image ID:', this.vehicleItem.imageId);
-                        await this.addItem();
+                        await this.addVehicle();
+
                         this.vehicleItem = Create();
                         const inputElement = document.getElementById('imageInput') as HTMLInputElement;
+
                         if (inputElement) {
                             inputElement.value = '';
                         }
@@ -129,13 +135,6 @@ export class AddVehicleComponent {
         }
  
         console.error('Max attempts reached. Job may not be finished or there was an error.');
-    }
-  }
-
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-        this.selectedFile = input.files[0];
     }
   }
 

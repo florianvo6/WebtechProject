@@ -7,6 +7,8 @@ import { Alert } from '../services/models/alert-type';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../services/alert-service/alert.service';
+import { RealestateService } from '../services/realestate-service/realestate.service';
+import { ChatService } from '../services/chat-service/chat.service';
 
 @Component({
   selector: 'app-detail-real-estate',
@@ -25,31 +27,30 @@ export class DetailRealEstateComponent {
   alert: Alert | null = null;
   imageUrl: string | null = '';
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, private alertService: AlertService) {
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, private alertService: AlertService, private chatService: ChatService, private realestateService: RealestateService) {
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.route.params.subscribe(async params => {
       this.id = +params['id'];
       this.imageUrl = params['url'];
-      this.sender = localStorage.getItem('username');
-      await this.getData(this.id);
-      this.recipient = this.item.owner;
-      this.title = this.item.title;
     });
+
+    this.sender = localStorage.getItem('username');
+    await this.getRealEstateItem(this.id!);
+    this.recipient = this.item.owner;
+    this.title = this.item.title;
   }
 
-  getData(id: number): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.http.post('http://localhost:8000/real-estate/id', { id: this.id })
-      .subscribe(
-        (response: any) => {
+  getRealEstateItem(id: number): Promise<void> {
+      return new Promise((resolve, reject) => {
+        this.realestateService.getRealestateById(id).subscribe(
+        (response) => {
           this.item = response;
-          console.info(response);
-          resolve();
+          resolve(); 
         },
         (error) => {
-          console.error('Error fetching products:', error);
+          this.alertService.error("Error: " + error.message)
           reject(error);
         }
       );
@@ -66,38 +67,37 @@ export class DetailRealEstateComponent {
       return;
     }
 
-    const newChat = {
+    const chatPayload = {
       sender: this.sender,
       title: this.title,
       recipient: this.recipient
     };
 
-    this.http.post('http://localhost:8000/chats', newChat).subscribe(
+    this.chatService.addChat(chatPayload).subscribe(
       (chatResponse: any) => {
+          const messagePayload = {
+              chat_id: chatResponse.id,
+              sender: chatPayload.sender,
+              recipient: chatPayload.recipient,
+              text: this.messageText,
+              time: new Date().toString()
+          };
 
-        const newMessage = {
-          chat_id: chatResponse.id,
-          sender: newChat.sender,
-          recipient: newChat.recipient,
-          text: this.messageText,
-          time: new Date().toString()
-        };
-
-        this.http.post('http://localhost:8000/add-message', newMessage).subscribe(
-          () => {
-            this.alertService.success("Message sent successfully!");
-            this.messageText = '';
-            this.showMessageInput = false;
-          },
-          (error) => {
-            console.error("Error sending message:", error);
-            this.alertService.error("Error sending message.");
-          }
-        );
+          this.chatService.addMessage(messagePayload).subscribe(
+              () => {
+                  this.alertService.success("Message sent successfully!");
+                  this.messageText = '';
+                  this.showMessageInput = false;
+              },
+              (error) => {
+                  console.error("Error sending message:", error);
+                  this.alertService.error("Error sending message.");
+              }
+          );
       },
       (error) => {
-        console.error("Error creating chat:", error);
-        this.alertService.error("Error creating chat.");
+          console.error("Error creating chat:", error);
+          this.alertService.error("Error creating chat.");
       }
     );
   }

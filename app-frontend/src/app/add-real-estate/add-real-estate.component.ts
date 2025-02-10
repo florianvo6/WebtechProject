@@ -9,6 +9,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ImageService } from '../services/image-service/image.service';
 import { firstValueFrom } from 'rxjs';
+import { createRealestateItem, RealEstateItem } from '../models/realestateitem';
+import { RealestateService } from '../services/realestate-service/realestate.service';
 
 @Component({
   selector: 'app-add-real-estate',
@@ -17,23 +19,12 @@ import { firstValueFrom } from 'rxjs';
   styleUrl: './add-real-estate.component.css'
 })
 export class AddRealEstateComponent {
-  title: string = '';
-  owner: string = '';
-  description: string = '';
-  price: number | null = null;
-  address: string = '';
-  type: string = '';
-  selltype: string = '';
-  rooms: string = '';
-  size: string = '';
-  name: string = '';
-  image_id: number | null = null;
-
+  realestateItem: RealEstateItem = createRealestateItem();
   jobId: number | null = null;
   selectedFile: File | null = null;
   alert: Alert | null = null;
 
-  constructor(private imageService: ImageService, private http: HttpClient, private router: Router, private alertService: AlertService) { }
+  constructor(private imageService: ImageService, private http: HttpClient, private router: Router, private alertService: AlertService, private realestateService: RealestateService) { }
  
   ngOnInit() {
     this.alertService.clear();
@@ -41,66 +32,68 @@ export class AddRealEstateComponent {
     const storedName = localStorage.getItem('name');
     const storedAddress = localStorage.getItem('address');
     if (storedUsername) {
-        this.owner = storedUsername;
+        this.realestateItem.seller.owner = storedUsername;
     }
 
     if (storedName) {
-        this.name = storedName;
+        this.realestateItem.seller.name = storedName;
     }
 
     if (storedAddress) {
-      this.address = storedAddress;
+      this.realestateItem.seller.address = storedAddress;
     }
   }
 
-  addItem() {
-    this.http.post('http://localhost:8000/add-real-estate', { owner: this.owner, name: this.name, address: this.address, title: this.title, description: this.description, price: this.price, type: this.type, size: this.size, rooms: this.rooms, selltype: this.selltype, image_id: this.image_id})
-      .subscribe(
-        (response: any) => {
-          console.log(response);
+  async addItem() {
+    const payload = {
+      owner: this.realestateItem.seller.owner,
+      name: this.realestateItem.seller.name,
+      address: this.realestateItem.seller.address,
+      title: this.realestateItem.title,
+      description: this.realestateItem.description,
+      price: this.realestateItem.price,
+      type: this.realestateItem.type,
+      selltype: this.realestateItem.selltype,
+      size: this.realestateItem.size,
+      rooms: this.realestateItem.rooms,
+      image_id: this.realestateItem.imageId,
+    };
+
+    this.realestateService.addRealestate(payload).subscribe(
+      (response: any) => {
           if (response && response.message) {
-            this.alertService.success('Item added successfully!');
+              this.alertService.success('Item added successfully!');
           } else {
-            this.alertService.error('Failed to add item. Please try again.');
+              this.alertService.error('Failed to add item. Please try again.');
           }
-        },
-        (error) => {
+      },
+      (error) => {
           this.alertService.error("Failed to add item! " + error.error.message + " Please try again.");
           console.error('Error response:', error);
+      }
+    );
+  }
+  
+  async onUpload(): Promise<void> {
+    if (this.selectedFile) {
+        try {
+            const response = await firstValueFrom(this.imageService.uploadImage(this.selectedFile));
+            this.jobId = response.jobID;
+            await this.retrieveImageData();
+        } catch (error) {
+            console.error('Upload failed:', error);
+            this.alertService.error('Upload failed!');
         }
-      );
-  }
-
-  goToProfil() {
-    this.router.navigate(['/profile']);
-  }
-
-  goToRealEstate() {
-    this.router.navigate(['/add-real-estate']);
+    } else {
+        this.alertService.error('Please select a file first.');
+    }
   }
 
   onFileSelected(event: Event): void {
-      const input = event.target as HTMLInputElement;
-      if (input.files && input.files.length > 0) {
-          this.selectedFile = input.files[0];
-      }
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+        this.selectedFile = input.files[0];
     }
-  
-    async onUpload(): Promise<void> {
-      if (this.selectedFile) {
-          try {
-              const response = await firstValueFrom(this.imageService.uploadImage(this.selectedFile));
-              console.log('Upload successful:', response);
-              this.jobId = response.jobID;
-              await this.retrieveImageData();
-              this.goToRealEstate()
-          } catch (error) {
-              console.error('Upload failed:', error);
-              this.alertService.error('Upload failed!');
-          }
-      } else {
-          this.alertService.error('Please select a file first.');
-      }
   }
   
   async retrieveImageData(): Promise<void> {
@@ -112,14 +105,20 @@ export class AddRealEstateComponent {
         while (attempts < maxAttempts) {
             try {
                 const response = await firstValueFrom(this.imageService.getJobDetails(this.jobId.toString()));
-                console.log('Job details:', response);
+                
                 if (response.success) {
                     const finishedJobData = response.job.finishedJobData;
   
                     if (finishedJobData) {
-                      this.image_id = finishedJobData.fileID.toString();
-                      console.log('Image ID:', this.image_id);
+                      this.realestateItem.imageId = finishedJobData.fileID.toString();
                       await this.addItem();
+                      
+                      this.realestateItem = createRealestateItem();
+                      const inputElement = document.getElementById('imageInput') as HTMLInputElement;
+                      
+                      if (inputElement) {
+                        inputElement.value = '';
+                      }
                       return;
                     } else {
                         console.warn('Finished job data is null. Retrying...');
@@ -137,5 +136,9 @@ export class AddRealEstateComponent {
   
         console.error('Max attempts reached. Job may not be finished or there was an error.');
     }
+  }
+
+  goToProfil() {
+    this.router.navigate(['/profile']);
   }
 }

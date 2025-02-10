@@ -11,7 +11,6 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   getUserByUsername(username: string): Observable<any> {
-    console.log(username);
     return this.http.post<any>(`${this.apiUrl}/user/username`, { login: username });
   }
 }

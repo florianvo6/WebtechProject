@@ -15,6 +15,9 @@ import { VehicleComponent } from './vehicle/vehicle.component';
 import { AddVehicleComponent } from './add-vehicle/add-vehicle.component';
 import { ProfileComponent } from './profile/profile.component';
 import { DetailVehicleComponent } from './detail-vehicle/detail-vehicle.component';
+import { UpdateMarketitemComponent } from './update-marketitem/update-marketitem.component';
+import { UpdateRealEstateComponent } from './update-real-estate/update-real-estate.component';
+import { UpdateVehicleComponent } from './update-vehicle/update-vehicle.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -24,12 +27,15 @@ export const routes: Routes = [
   { path: 'marketplace', component: MarketplaceComponent },
   { path: 'add-market-item', component: AddMarketplaceComponent },
   { path: 'product-detail/:id/:url', component: DetailItemComponent },
+  { path: 'product-update/:id', component: UpdateMarketitemComponent},
   { path: 'real-estate', component: RealEstateComponent },
   { path: 'add-real-estate-item', component: AddRealEstateComponent },
   { path: 'real-estate-detail/:id/:url', component: DetailRealEstateComponent },
+  { path: 'real-estate-update/:id', component: UpdateRealEstateComponent },
   { path: 'vehicle', component: VehicleComponent },
   { path: 'add-vehicle', component: AddVehicleComponent },
   { path: 'vehicle-detail/:id/:url', component: DetailVehicleComponent },
+  { path: 'vehicle-update/:id', component: UpdateVehicleComponent },
   { path: 'inbox', component: ChatComponent },
   { path: 'chat-detail/:id', component: DetailChatComponent },
   { path: 'profile', component: ProfileComponent },

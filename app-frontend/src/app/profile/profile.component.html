@@ -71,7 +71,7 @@
                                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                                   <div *ngFor="let item of marketplaceData" class="col mb-1 hover-effect" (click)="navigateToDetailPage(item.id)">
                                     <div class="card shadow-sm align-items-center" style="height: 245px;">
-                                        <img src="assets/edit.png" alt="Edit" class="edit-icon" (click)="editMarketItem(item.id)" />
+                                        <img src="assets/edit.png" alt="Edit" class="edit-icon" (click)="navigateToUpdateMarketItem(item.id)" />
                                         <img src="assets/remove.png" alt="Delete" class="delete-icon" (click)="delteMarketItem(item.id)" />
                                         <img class="card-img-top mt-4 border" [src]="item.imageUrl" style="width: 170px; height: 130px; max-height: 130px;" />
                                         <div class="card-body d-flex flex-column">
@@ -98,7 +98,7 @@
                                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                                   <div *ngFor="let item of realEstateData" class="col mb-1 hover-effect" (click)="navigateToDetailPage(item.id)">
                                     <div class="card shadow-sm align-items-center" style="height: 245px;">
-                                        <img src="assets/edit.png" alt="Edit" class="edit-icon" (click)="editRealEstate(item.id)" />
+                                        <img src="assets/edit.png" alt="Edit" class="edit-icon" (click)="navigateToUpdateRealEstate(item.id)" />
                                         <img src="assets/remove.png" alt="Delete" class="delete-icon" (click)="deleteRealEstate(item.id)" />
                                         <img class="card-img-top mt-4 border" [src]="item.imageUrl" style="width: 170px; height: 130px; max-height: 130px;"  />
                                         <div class="card-body d-flex flex-column">
@@ -125,7 +125,7 @@
                                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                                   <div *ngFor="let item of vehicleData" class="col mb-1 hover-effect" (click)="navigateToDetailPage(item.id)">
                                     <div class="card shadow-sm align-items-center" style="height: 245px;">
-                                        <img src="assets/edit.png" alt="Edit" class="edit-icon" (click)="editVehicle(item.id)" />
+                                        <img src="assets/edit.png" alt="Edit" class="edit-icon" (click)="navigateToUpdateVehicle(item.id)" />
                                         <img src="assets/remove.png" alt="Delete" class="delete-icon" (click)="deleteVehicle(item.id)" />
                                         <img class="card-img-top mt-4 border" [src]="item.imageUrl" style="width: 170px; height: 130px; max-height: 130px"  />
                                         <div class="card-body d-flex flex-column">
