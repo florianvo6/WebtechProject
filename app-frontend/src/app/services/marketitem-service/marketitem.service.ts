@@ -12,11 +12,15 @@ export class MarketitemService {
   
   constructor(private http: HttpClient) { }
 
+  getAllMarketItems(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/marketitems`)
+  }
+
   getMarketItems(owner: string, isOwner: boolean): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/marketitems`).pipe(
         map((response: any) => 
             response.filter((product: any) => 
-                isOwner ? product.owner === owner : product.owner !== owner
+                isOwner ? product.owner === owner : product.owner !== owner && product.sold === false
             )
         )
     );
@@ -24,6 +28,10 @@ export class MarketitemService {
 
   getMarketItemById(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/marketitem/id?id=${id}`);
+  }
+
+  markItemAsSold(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/marketitem/markassold`, { id: id});
   }
 
   addMarketItem(marketItem: any): Observable<any> {
@@ -36,5 +44,9 @@ export class MarketitemService {
 
   deleteMarketItem(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/delete-marketitem/${id}`);
+  }
+
+  addImageUrl(imageItem: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/marketitem/add-image-url`, { payload: imageItem});
   }
 }

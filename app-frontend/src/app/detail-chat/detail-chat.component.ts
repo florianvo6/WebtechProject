@@ -7,6 +7,7 @@ import { AlertService } from '../services/alert-service/alert.service';
 import { AlertComponent } from '../alert/alert.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { Alert } from '../services/models/alert-type';
+import { ChatService } from '../services/chat-service/chat.service';
 
 @Component({
   selector: 'app-detail-chat',
@@ -24,51 +25,52 @@ export class DetailChatComponent {
   messages: any[] = [];
   alert: Alert | null = null;
   
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute, private alertService: AlertService, private cdr: ChangeDetectorRef) {}
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute, private alertService: AlertService, private cdr: ChangeDetectorRef, private chatService: ChatService) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.chatUser = localStorage.getItem('username');
     this.alertService.clear();
     this.route.params.subscribe(async params => {
       this.chatId = +params['id'];
-      await this.getData(this.chatId);
-      await this.getMessages(this.chatId);
-      this.cdr.detectChanges();
-      console.info(this.messages);
     });
+
+    await this.getChat(this.chatId!);
+    await this.getMessages(this.chatId!);
+    this.cdr.detectChanges();
   }
 
-  getData(id: number): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.http.post('http://localhost:8000/chat/id', { id: this.chatId })
-      .subscribe(
-        (response: any) => {
+  getChat(id: number): Promise<void> {
+      return new Promise((resolve, reject) => {
+        this.chatService.getChatById(id).subscribe(
+        (response) => {
           this.chat = response;
-          resolve();
+          resolve(); 
         },
         (error) => {
-          console.error('Error fetching products:', error);
+          this.alertService.error("Error: " + error.message)
           reject(error);
         }
       );
     });
   }
 
-  getMessages(chatId: number): Promise<void> {
-    return new Promise((resolve, reject) => {
-        this.http.post('http://localhost:8000/messages/chatId', { id: chatId })
-            .subscribe((response: any) => {
-                this.messages = response;
-                this.cdr.detectChanges();
-                resolve();
-            }, error => {
-                console.error('Error fetching messages:', error);
-                reject(error);
-            });
+  getMessages(id: number): Promise<void> {
+      return new Promise((resolve, reject) => {
+        this.chatService.getMessagesById(id).subscribe(
+        (response) => {
+          this.messages = response;
+          this.cdr.detectChanges();
+          resolve();
+        },
+        (error) => {
+          this.alertService.error("Error: " + error.message)
+          reject(error);
+        }
+      );
     });
   }
 
-  async sendMessage() {
+  sendMessage() {
     if (!this.newMessage.trim()) {
       this.alertService.error("It's not possible to send an empty message! Please enter a message.")
       return;
@@ -77,41 +79,41 @@ export class DetailChatComponent {
     const messageData = {
       chat_id: this.chatId,
       sender: this.chatUser,
-      recipient: await this.getRecipient(),
+      recipient: this.getRecipient(),
       text: this.newMessage,
       time: new Date().toString()
     };
 
-    console.info(messageData);
-
-    this.http.post('http://localhost:8000/add-message', messageData).subscribe(
+    this.chatService.addMessage(messageData).subscribe(
       () => {
-        if(this.chatId != null) {
-        this.messages.push(messageData);
-        this.cdr.detectChanges();
-        this.newMessage = '';
-        }
-      },
+            if (this.chatId != null) {
+              this.messages.push(messageData);
+              this.cdr.detectChanges();
+              this.newMessage = '';
+            }
+      }, 
       (error) => {
-        console.error("Error sending message:", error);
-        alert("Error sending message.");
+          this.alertService.error("Failed to send message! " + error.error.message + " Please try again.");
+          console.error('Error response:', error);
       }
     );
   }
 
-  deleteChat(id = this.chatId): Promise<void> {
+  deleteChat(id = this.chatId!): Promise<void> {
     return new Promise((resolve, reject) => {
-        this.http.delete('http://localhost:8000/delete-chat/chatId/' + id)
-            .subscribe((response: any) => {
-                this.alertService.success('Chat deleted successfully!');
-                this.alertService.keepAfterRouteChange();
-                this.cdr.detectChanges();
-                this.goToInbox();
-                resolve();
-            }, error => {
-                console.error('Error deleting chat:', error);
+        this.chatService.deleteChatById(id).subscribe(
+            (response) => {
+              this.alertService.success('Chat deleted successfully!');
+              this.alertService.keepAfterRouteChange();
+              this.cdr.detectChanges();
+              this.goToInbox();
+              resolve();
+            },
+            (error) => {
+                this.alertService.error("Error: " + error.message)
                 reject(error);
-            });
+            }
+        );
     });
   }
   

@@ -6,6 +6,7 @@ import { AlertComponent } from '../alert/alert.component';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ChatService } from '../services/chat-service/chat.service';
 
 @Component({
   selector: 'app-chat',
@@ -19,7 +20,7 @@ export class ChatComponent {
   isUserSender: boolean | undefined;
   data: any[] = [];
 
-  constructor(private http: HttpClient, private router: Router, private alertService: AlertService) {}
+  constructor(private http: HttpClient, private router: Router, private alertService: AlertService, private chatService: ChatService) {}
 
   async ngOnInit() {
     this.chatUser  = localStorage.getItem('username');
@@ -29,17 +30,16 @@ export class ChatComponent {
 
   getChats(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.http.post('http://localhost:8000/chats/recipient', { recipient: this.chatUser })
-      .subscribe(
-        (response: any) => {
-          this.data = response;
-          resolve();
-        },
-        (error) => {
-          console.error('Error fetching products:', error);
-          reject(error);
-        }
-      );
+        this.chatService.getUserChats(this.chatUser!).subscribe(
+            (data: any) => {
+                this.data = data;
+                resolve();
+            },
+            (error) => {
+                console.error('Error fetching chats:', error);
+                reject(error);
+            }
+        );
     });
   }
 

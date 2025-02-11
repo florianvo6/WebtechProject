@@ -1,5 +1,5 @@
 <app-navbar></app-navbar>
-<div style="width: 965px;" class="mx-auto">
+<div style="width: 1500px;" class="mx-auto">
     <app-alert></app-alert>
 </div>
 <div class="modal-container">
@@ -73,10 +73,11 @@
                                     <div class="card shadow-sm align-items-center" style="height: 245px;">
                                         <img src="assets/edit.png" alt="Edit" class="edit-icon" (click)="navigateToUpdateMarketItem(item.id)" />
                                         <img src="assets/remove.png" alt="Delete" class="delete-icon" (click)="delteMarketItem(item.id)" />
-                                        <img class="card-img-top mt-4 border" [src]="item.imageUrl" style="width: 170px; height: 130px; max-height: 130px;" />
+                                        <img *ngIf="item.sold" src="assets/sold.png" alt="Sold" class="sold-icon" style="width: 85px; height: 40px;" />
+                                        <img class="card-img-top mt-4 border" [src]="item.image_url" style="width: 170px; height: 130px; max-height: 130px;" />
                                         <div class="card-body d-flex flex-column">
                                         <h6>{{item.title}} - {{item.price}} €</h6>
-                                        <button type="button" class="btn btn-outline-secondary btn-sm my-3 my-sm-0 me-2 custom-btn" (click)="markItemAsSold(item.id)">Mark As Sold</button>
+                                        <button *ngIf="!item.sold" type="button" class="btn btn-outline-secondary btn-sm my-3 my-sm-0 me-2 custom-btn" (click)="markItemAsSold(item.id)">Mark As Sold</button>
                                       </div>
                                     </div>
                                   </div>
@@ -100,10 +101,11 @@
                                     <div class="card shadow-sm align-items-center" style="height: 245px;">
                                         <img src="assets/edit.png" alt="Edit" class="edit-icon" (click)="navigateToUpdateRealEstate(item.id)" />
                                         <img src="assets/remove.png" alt="Delete" class="delete-icon" (click)="deleteRealEstate(item.id)" />
-                                        <img class="card-img-top mt-4 border" [src]="item.imageUrl" style="width: 170px; height: 130px; max-height: 130px;"  />
+                                        <img *ngIf="item.sold" src="assets/sold.png" alt="Sold" class="sold-icon" style="width: 85px; height: 40px;" />
+                                        <img class="card-img-top mt-4 border" [src]="item.image_url" style="width: 170px; height: 130px; max-height: 130px;"  />
                                         <div class="card-body d-flex flex-column">
                                         <h6>{{item.title}} - {{item.price}} €</h6>
-                                        <button type="button" class="btn btn-outline-secondary btn-sm my-3 my-sm-0 me-2 custom-btn" (click)="markRealEstateAsSold(item.id)">Mark As Sold</button>
+                                        <button *ngIf="!item.sold" type="button" class="btn btn-outline-secondary btn-sm my-3 my-sm-0 me-2 custom-btn" (click)="markRealEstateAsSold(item.id)">Mark As Sold</button>
                                       </div>
                                     </div>
                                   </div>
@@ -127,10 +129,11 @@
                                     <div class="card shadow-sm align-items-center" style="height: 245px;">
                                         <img src="assets/edit.png" alt="Edit" class="edit-icon" (click)="navigateToUpdateVehicle(item.id)" />
                                         <img src="assets/remove.png" alt="Delete" class="delete-icon" (click)="deleteVehicle(item.id)" />
-                                        <img class="card-img-top mt-4 border" [src]="item.imageUrl" style="width: 170px; height: 130px; max-height: 130px"  />
+                                        <img *ngIf="item.sold" src="assets/sold.png" alt="Sold" class="sold-icon" style="width: 85px; height: 40px;" />
+                                        <img class="card-img-top mt-4 border" [src]="item.image_url" style="width: 170px; height: 130px; max-height: 130px"  />
                                         <div class="card-body d-flex flex-column">
                                         <h6>{{item.title}} - {{item.price}} €</h6>
-                                        <button type="button" class="btn btn-outline-secondary btn-sm my-3 my-sm-0 me-2 custom-btn" (click)="markVehicleAsSold(item.id)">Mark As Sold</button>
+                                        <button *ngIf="!item.sold" type="button" class="btn btn-outline-secondary btn-sm my-3 my-sm-0 me-2 custom-btn" (click)="markVehicleAsSold(item.id)">Mark As Sold</button>
                                       </div>
                                     </div>
                                   </div>

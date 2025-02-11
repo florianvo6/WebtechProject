@@ -11,11 +11,15 @@ export class RealestateService {
       
   constructor(private http: HttpClient) { }
 
+  getAllRealEstate(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/realestate`)
+  }
+
   getRealEstate(owner: string, isOwner: boolean): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/realestate`).pipe(
         map((response: any) => 
             response.filter((realestate: any) => 
-                isOwner ? realestate.owner === owner : realestate.owner !== owner
+                isOwner ? realestate.owner === owner : realestate.owner !== owner && realestate.sold === false
             )
         )
     );
@@ -23,6 +27,10 @@ export class RealestateService {
 
   getRealestateById(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/realestate/id?id=${id}`);
+  }
+
+  markRealestateAsSold(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/realestate/markassold`, { id: id});
   }
 
   addRealestate(realestate: any): Observable<any> {
@@ -35,5 +43,9 @@ export class RealestateService {
 
   deleteRealestate(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/delete-realestate/${id}`);
+  }
+
+  addImageUrl(imageItem: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/realestate/add-image-url`, { payload: imageItem});
   }
 }

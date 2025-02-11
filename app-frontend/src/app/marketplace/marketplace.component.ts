@@ -21,14 +21,13 @@ export class MarketplaceComponent {
   owner: string | null = null;
   searchTerm: string = '';
 
-  constructor(private http: HttpClient, private router: Router, private alertService: AlertService, private imageService: ImageService, private marketitemService: MarketitemService) { }
+  constructor(private router: Router, private alertService: AlertService, private marketitemService: MarketitemService) { }
 
   async ngOnInit() {
     this.alertService.clear();
     this.owner = localStorage.getItem('username');
 
     await this.getProducts();
-    await this.saveImgUrl(this.data);
   }
  
   getProducts(): Promise<void> {
@@ -52,15 +51,12 @@ export class MarketplaceComponent {
     try {
       if (condition && !handover) {
         this.data = this.data.filter(item => condition === item.condition);
-        await this.saveImgUrl(this.data);
       }
       else if (!condition && handover) {
         this.data = this.data.filter(item => handover === item.handover);
-        await this.saveImgUrl(this.data);
       }
       else if (condition && handover) {
         this.data = this.data.filter(item => condition === item.condition && handover === item.handover);
-        await this.saveImgUrl(this.data);
       }
     }
     catch (error) {
@@ -72,52 +68,13 @@ export class MarketplaceComponent {
     await this.getProducts();
     const normalizedSearchTerm = this.searchTerm.trim().toLowerCase();
 
-        this.data = this.data.filter(item =>
-            item.title.toLowerCase().includes(normalizedSearchTerm)
-        );
-        await this.saveImgUrl(this.data);
-  }
-
-  async getImageUrl(imageId: string): Promise<string> {
-    let imageUrl = '';
-
-    try {
-        const response = await firstValueFrom(this.imageService.downloadImage(imageId));
-        if (response.success) {
-            imageUrl = await this.setDirectDownloadFalse(response.downloadURL);
-            console.log('Image URL:', imageUrl);
-            return imageUrl;
-        } else {
-            console.error('Failed to retrieve image URL:', response);
-            imageUrl = '';
-        }
-    } catch (error) {
-        console.error('Error downloading image:', error);
-    }
-
-    return imageUrl;
-  }
- 
-  async setDirectDownloadFalse(url: string): Promise<string> {
-    const parsedUrl = new URL(url);
-    parsedUrl.searchParams.set('directDownload', 'false');
-    return parsedUrl.toString();
-  }
-
-  async saveImgUrl(data: any[]): Promise<void> {
-    data.forEach(item => {
-      this.getImageUrl(item.image_id).then(url => {
-          item.imageUrl = url;
-      }).catch(error => {
-          console.error(`Error fetching image URL for item ${item.id}:`, error);
-          item.imageUrl = 'assets/real-estate.png';
-      });
-    });
+      this.data = this.data.filter(item =>
+          item.title.toLowerCase().includes(normalizedSearchTerm)
+      );
   }
 
   async resetData() {
     await this.getProducts();
-    await this.saveImgUrl(this.data);
   }
 
   public navigateToAddPage() {

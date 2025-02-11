@@ -11,11 +11,15 @@ export class VehicleService {
     
   constructor(private http: HttpClient) { }
 
+  getAllVehicles(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/vehicles`)
+  }
+
   getVehicles(owner: string, isOwner: boolean): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/vehicles`).pipe(
         map((response: any) => 
             response.filter((vehicle: any) => 
-                isOwner ? vehicle.owner === owner : vehicle.owner !== owner
+                isOwner ? vehicle.owner === owner : vehicle.owner !== owner && vehicle.sold === false
             )
         )
     );
@@ -23,6 +27,10 @@ export class VehicleService {
 
   getVehicleById(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/vehicle/id?id=${id}`);
+  }
+
+  markVehicleAsSold(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/vehicle/markassold`, { id: id});
   }
 
   addVehicle(vehicle: any): Observable<any> {
@@ -35,5 +43,9 @@ export class VehicleService {
 
   deleteVehicle(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/delete-vehicle/${id}`);
+  }
+
+  addImageUrl(imageItem: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/vehicle/add-image-url`, { payload: imageItem});
   }
 }

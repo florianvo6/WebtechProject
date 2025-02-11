@@ -10,7 +10,11 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  getUserByUsername(username: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/user/username`, { login: username });
+  getUserByUsername(login: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/user/${login}`);
+  }
+
+  changeUserSetting(settings: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/user/change`, { payload: settings});
   }
 }

@@ -16,6 +16,9 @@ const checkAuth = require('./check_auth');
 
 const loginRoutes = require('./login');
 
+// USER SECTION //
+
+// Endpoint to log in
 app.use("/login", loginRoutes);
 
 app.get("/logout", checkAuth, (req, res) => {
@@ -27,6 +30,7 @@ app.get("/logout", checkAuth, (req, res) => {
     });
 });
 
+// Endpoint to register
 app.post('/register', async (req, res) => {
     const { user, pass, name, mail, address} = req.body;
 
@@ -53,26 +57,9 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// helper endpoint
-app.get('/users', (req, res) => {
-    const query = 'SELECT * FROM users';
-
-    pool.query(query)
-        .then(results => {
-            if (results.rows.length === 0) {
-                return res.status(404).send("No users found.");
-            }
-
-            return res.status(200).json(results.rows);
-        })
-        .catch(error => {
-            console.error(error);
-            return res.status(500).send("Error retrieving user data.");
-        });
-});
-
-app.post('/user/username', async (req, res) => {
-    const { login } = req.body;
+// Endpoint to get a user by username
+app.get('/user/:login', async (req, res) => {
+    const { login } = req.params;
     const text = 'SELECT * FROM users WHERE login = $1';
 
     const values = [login];
@@ -80,15 +67,16 @@ app.post('/user/username', async (req, res) => {
     try {
         const results = await pool.query(text, values);
         if (results.rows.length === 0) {
-            return res.status(404).send("User not found.");
+            return res.status(404).send({ message: 'User not found.' });
         }
         return res.status(200).json(results.rows[0]);
     } catch (error) {
         console.error(error);
-        return res.status(500).send("Error retrieving user.");
+        return res.status(500).send({ message: 'Error retrieving user.' });
     }
 });
 
+// Endpoint to change the setting of a unser
 app.post('/user/change', async (req, res) => {
     const { login, password, name, email, address, currentUser  } = req.body.payload;
    
@@ -245,6 +233,74 @@ app.post('/update-marketitem', async (req, res) => {
     }
 });
 
+// Endpoint to mark an item as sold by ID
+app.post('/marketitem/markassold', async (req, res) => {
+    const id = req.body.id;
+
+    // Validate input
+    if (!id) {
+        return res.status(400).send({ message: 'Item ID is required.' });
+    }
+
+    const marketItemCheckText = 'SELECT * FROM marketitems WHERE id = $1';
+    const marketItemCheckTextCheckValues = [id];
+
+    try {
+        const marketitemCheckResults = await pool.query(marketItemCheckText, marketItemCheckTextCheckValues);
+       
+        if (marketitemCheckResults.rows.length === 0) {
+            return res.status(404).json({ message: "Item not found." });
+        }
+
+        const updateText = `UPDATE marketitems SET sold = $1 WHERE id = $2 RETURNING *;`;
+        const updateValues = [true, id];
+
+        const updateResults = await pool.query(updateText, updateValues);
+       
+        return res.status(200).json({
+            message: "Market item marked as sold successfully.",
+            item: updateResults.rows[0]
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Error marking market item as sold." });
+    }
+});
+
+// Endpoint to add an image url to an item by ID
+app.post('/marketitem/add-image-url', async (req, res) => {
+    const { id, image_url } = req.body.payload;
+
+    // Validate input
+    if (!id || !image_url) {
+        return res.status(400).send({ message: 'All fields are required.' });
+    }
+
+    const marketItemCheckText = 'SELECT * FROM marketitems WHERE id = $1';
+    const marketItemCheckTextCheckValues = [id];
+
+    try {
+        const marketitemCheckResults = await pool.query(marketItemCheckText, marketItemCheckTextCheckValues);
+       
+        if (marketitemCheckResults.rows.length === 0) {
+            return res.status(404).json({ message: "Item not found." });
+        }
+
+        const updateText = `UPDATE marketitems SET image_url = $1 WHERE id = $2 RETURNING *;`;
+        const updateValues = [image_url, id];
+
+        const updateResults = await pool.query(updateText, updateValues);
+       
+        return res.status(200).json({
+            message: "Image url added successfully.",
+            item: updateResults.rows[0]
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Error fetching image url" });
+    }
+});
+
 // REAL ESTATE SECTION //
 
 // Endpoint to get all real estate items
@@ -365,6 +421,73 @@ app.post('/update-realestate', async (req, res) => {
     }
 });
 
+// Endpoint to mark a real estate item as sold by ID
+app.post('/realestate/markassold', async (req, res) => {
+    const id = req.body.id;
+
+    // Validate input
+    if (!id) {
+        return res.status(400).send({ message: 'Item ID is required.' });
+    }
+
+    const realestateItemCheckText = 'SELECT * FROM immoitems WHERE id = $1';
+    const realestateItemCheckTextCheckValues = [id];
+
+    try {
+        const realestateItemCheckResults = await pool.query(realestateItemCheckText, realestateItemCheckTextCheckValues);
+       
+        if (realestateItemCheckResults.rows.length === 0) {
+            return res.status(404).json({ message: "Item not found." });
+        }
+
+        const updateText = `UPDATE immoitems SET sold = $1 WHERE id = $2 RETURNING *;`;
+        const updateValues = [true, id];
+
+        const updateResults = await pool.query(updateText, updateValues);
+       
+        return res.status(200).json({
+            message: "Real estate item marked as sold successfully.",
+            item: updateResults.rows[0]
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Error marking real estate item as sold." });
+    }
+});
+
+// Endpoint to add an image url to a real estate item by ID
+app.post('/realestate/add-image-url', async (req, res) => {
+    const { id, image_url } = req.body.payload;
+
+    // Validate input
+    if (!id || !image_url) {
+        return res.status(400).send({ message: 'All fields are required.' });
+    }
+
+    const realestateItemCheckText = 'SELECT * FROM immoitems WHERE id = $1';
+    const realestateItemCheckTextCheckValues = [id];
+
+    try {
+        const realestateItemCheckResults = await pool.query(realestateItemCheckText, realestateItemCheckTextCheckValues);
+       
+        if (realestateItemCheckResults.rows.length === 0) {
+            return res.status(404).json({ message: "Item not found." });
+        }
+
+        const updateText = `UPDATE immoitems SET image_url = $1 WHERE id = $2 RETURNING *;`;
+        const updateValues = [image_url, id];
+
+        const updateResults = await pool.query(updateText, updateValues);
+       
+        return res.status(200).json({
+            message: "Image url added successfully.",
+            item: updateResults.rows[0]
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Error fetching image url" });
+    }
+});
 // VEHICLE SECTION //
 
 // Endpoint to get all vehicles
@@ -485,6 +608,74 @@ app.post('/update-vehicle', async (req, res) => {
     }
 });
 
+// Endpoint to mark a vehicle as sold by ID
+app.post('/vehicle/markassold', async (req, res) => {
+    const id = req.body.id;
+
+    // Validate input
+    if (!id) {
+        return res.status(400).send({ message: 'Vehicle ID is required.' });
+    }
+
+    const vehiclesCheckText = 'SELECT * FROM vehicles WHERE id = $1';
+    const vehiclesCheckTextCheckValues = [id];
+
+    try {
+        const vehiclesCheckResults = await pool.query(vehiclesCheckText, vehiclesCheckTextCheckValues);
+       
+        if (vehiclesCheckResults.rows.length === 0) {
+            return res.status(404).json({ message: "Vehicle not found." });
+        }
+
+        const updateText = `UPDATE vehicles SET sold = $1 WHERE id = $2 RETURNING *;`;
+        const updateValues = [true, id];
+
+        const updateResults = await pool.query(updateText, updateValues);
+       
+        return res.status(200).json({
+            message: "Vehicle marked as sold successfully.",
+            item: updateResults.rows[0]
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Error marking vehicle as sold." });
+    }
+});
+
+// Endpoint to add an image url to a vehicle by ID
+app.post('/vehicle/add-image-url', async (req, res) => {
+    const { id, image_url } = req.body.payload;
+
+    // Validate input
+    if (!id || !image_url) {
+        return res.status(400).send({ message: 'All fields are required.' });
+    }
+
+    const vehiclesCheckText = 'SELECT * FROM vehicles WHERE id = $1';
+    const vehiclesCheckTextCheckValues = [id];
+
+    try {
+        const vehiclesCheckResults = await pool.query(vehiclesCheckText, vehiclesCheckTextCheckValues);
+       
+        if (vehiclesCheckResults.rows.length === 0) {
+            return res.status(404).json({ message: "Item not found." });
+        }
+
+        const updateText = `UPDATE vehicles SET image_url = $1 WHERE id = $2 RETURNING *;`;
+        const updateValues = [image_url, id];
+
+        const updateResults = await pool.query(updateText, updateValues);
+       
+        return res.status(200).json({
+            message: "Image url added successfully.",
+            item: updateResults.rows[0]
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Error fetching image url" });
+    }
+});
+
 // CHAT SECTION //
 
 // Endpoint to create a new chat
@@ -508,12 +699,12 @@ app.post('/add-chat', async (req, res) => {
 });
 
 // Endpoint to get all chats of an user
-app.post('/chats/recipient', async (req, res) => {
-    const { recipient } = req.body;
+app.get('/chats/:recipient', async (req, res) => {
+    const { recipient } = req.params;
 
     // Validate input
     if (!recipient) {
-        return res.status(400).send("Recipient ID is required.");
+        return res.status(400).send({ meassage: 'Recipient ID is required.' });
     }
 
     const text = 'SELECT * FROM chats WHERE recipient = $1 OR sender = $1;';
@@ -524,13 +715,13 @@ app.post('/chats/recipient', async (req, res) => {
         return res.status(200).json(results.rows);
     } catch (error) {
         console.error(error);
-        return res.status(500).send("Error retrieving chats.");
+        return res.status(500).send({ message: 'Error retrieving chats.' });
     }
 });
 
-// Endpoint to get a chat with the id
-app.post('/chat/id', async (req, res) => {
-    const { id } = req.body;
+// Endpoint to get a chat by ID
+app.get('/chat/id', async (req, res) => {
+    const { id } = req.query;
     const text = 'SELECT * FROM chats WHERE id = $1';
 
     const values = [id];
@@ -538,60 +729,62 @@ app.post('/chat/id', async (req, res) => {
     try {
         const results = await pool.query(text, values);
         if (results.rows.length === 0) {
-            return res.status(404).send("Chat not found.");
+            return res.status(404).send({ message: 'Chat not found.' });
         }
         return res.status(200).json(results.rows[0]);
     } catch (error) {
         console.error(error); 
-        return res.status(500).send("Error retrieving chat.");
+        return res.status(500).send({ message: 'Error retrieving chat.' });
     }
 });
 
-app.post('/messages/chatId', async (req, res) => {
-    const { id } = req.body; // Get the chat ID from the request body
-    const text = 'SELECT * FROM messages WHERE chat_id = $1 ORDER BY time ASC'; // SQL query to select messages
-
-    const values = [id]; // Values to be used in the query
-
-    try {
-        const results = await pool.query(text, values); // Execute the query
-        if (results.rows.length === 0) {
-            return res.status(404).send("No messages found for this chat."); // Handle case where no messages are found
-        }
-        return res.status(200).json(results.rows); // Return the messages
-    } catch (error) {
-        console.error(error); // Log any errors
-        return res.status(500).send("Error retrieving messages."); // Handle server errors
-    }
-});
-
-app.delete('/delete-chat/chatId/:id', async (req, res) => {
-    const { id } = req.params; 
-
-    const deleteMessagesText = 'DELETE FROM messages WHERE chat_id = $1'; 
-    const deleteChatText = 'DELETE FROM chats WHERE id = $1 RETURNING *'; 
+// Endpoint to get messages of a chat by ID
+app.get('/messages/chatId', async (req, res) => {
+    const { id } = req.query;
+    const text = 'SELECT * FROM messages WHERE chat_id = $1 ORDER BY time ASC';
 
     const values = [id];
 
     try {
-        await pool.query('BEGIN');
-
-        await pool.query(deleteMessagesText, values);
-
-        const result = await pool.query(deleteChatText, values);
-        
-        if (result.rowCount === 0) {
-            await pool.query('ROLLBACK'); 
-            return res.status(404).send("Chat not found.");
+        const results = await pool.query(text, values);
+        if (results.rows.length === 0) {
+            return res.status(404).send("No messages found for this chat.");
         }
-
-        await pool.query('COMMIT'); 
-        return res.status(200).json({ message: "Chat and associated messages deleted successfully.", chat: result.rows[0] });
+        return res.status(200).json(results.rows);
     } catch (error) {
-        await pool.query('ROLLBACK');
-        console.error(error); 
-        return res.status(500).send("Error deleting chat and messages.");
+        console.error(error);
+        return res.status(500).send("Error retrieving messages.");
     }
+});
+
+// Endpoint to delete a chat by ID
+app.delete('/delete-chat/:id', async (req, res) => {
+const { id } = req.params; 
+
+const deleteMessagesText = 'DELETE FROM messages WHERE chat_id = $1'; 
+const deleteChatText = 'DELETE FROM chats WHERE id = $1 RETURNING *'; 
+
+const values = [id];
+
+try {
+    await pool.query('BEGIN');
+
+    await pool.query(deleteMessagesText, values);
+
+    const result = await pool.query(deleteChatText, values);
+    
+    if (result.rowCount === 0) {
+        await pool.query('ROLLBACK'); 
+        return res.status(404).send("Chat not found.");
+    }
+
+    await pool.query('COMMIT'); 
+    return res.status(200).json({ message: "Chat and associated messages deleted successfully.", chat: result.rows[0] });
+} catch (error) {
+    await pool.query('ROLLBACK');
+    console.error(error); 
+    return res.status(500).send("Error deleting chat and messages.");
+}
 });
 
 // Endpoint to create a new message
@@ -619,6 +812,7 @@ app.post('/add-message', async (req, res) => {
     }
 });
 
+// PORT SECTION //
 
 let port = 8000;
 

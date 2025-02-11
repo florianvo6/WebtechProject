@@ -60,6 +60,14 @@
     cursor: pointer;
 }
 
+.sold-icon {
+    position: absolute;
+    bottom: 10px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
 .custom-btn {
     background-color: white;
     color: #7C8399;
