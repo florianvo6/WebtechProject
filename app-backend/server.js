@@ -58,7 +58,7 @@ app.post('/register', async (req, res) => {
 });
 
 // Endpoint to get a user by username
-app.get('/user/:login', async (req, res) => {
+app.get('/user/:login', checkAuth, async (req, res) => {
     const { login } = req.params;
     const text = 'SELECT * FROM users WHERE login = $1';
 
@@ -77,7 +77,7 @@ app.get('/user/:login', async (req, res) => {
 });
 
 // Endpoint to change the setting of a unser
-app.post('/user/change', async (req, res) => {
+app.post('/user/change', checkAuth, async (req, res) => {
     const { login, password, name, email, address, currentUser  } = req.body.payload;
    
     // Validate the input
@@ -115,7 +115,7 @@ app.post('/user/change', async (req, res) => {
 // MARKETITEM SECTION //
 
 // Endpoint to get all items
-app.get('/marketitems', async (req, res) => {
+app.get('/marketitems', checkAuth, async (req, res) => {
     const query = 'SELECT * FROM marketitems';
 
     try {
@@ -131,7 +131,7 @@ app.get('/marketitems', async (req, res) => {
 });
 
 // Endpoint to get a specific item by ID
-app.get('/marketitem/id', async (req, res) => {
+app.get('/marketitem/id', checkAuth, async (req, res) => {
     const { id } = req.query;
     const text = 'SELECT * FROM marketitems WHERE id = $1';
 
@@ -150,7 +150,7 @@ app.get('/marketitem/id', async (req, res) => {
 });
 
 // Endpoint to add a new item
-app.post('/add-marketitem', async (req, res) => {
+app.post('/add-marketitem', checkAuth, async (req, res) => {
     const { title, owner, description, price, address, condition, handover, name, image_id} = req.body.payload;
 
     // Validate input
@@ -172,7 +172,7 @@ app.post('/add-marketitem', async (req, res) => {
 });
 
 // Endpoint to delete a item by ID
-app.delete('/delete-marketitem/:id', async (req, res) => {
+app.delete('/delete-marketitem/:id', checkAuth, async (req, res) => {
     const { id } = req.params;
 
     // Validate input
@@ -199,7 +199,7 @@ app.delete('/delete-marketitem/:id', async (req, res) => {
 });
 
 // Endpoint to update a item by ID
-app.post('/update-marketitem', async (req, res) => {
+app.post('/update-marketitem', checkAuth, async (req, res) => {
     const { title, description, price, condition, handover, id} = req.body.payload;
 
     // Validate input
@@ -234,7 +234,7 @@ app.post('/update-marketitem', async (req, res) => {
 });
 
 // Endpoint to mark an item as sold by ID
-app.post('/marketitem/markassold', async (req, res) => {
+app.post('/marketitem/markassold', checkAuth, async (req, res) => {
     const id = req.body.id;
 
     // Validate input
@@ -268,7 +268,7 @@ app.post('/marketitem/markassold', async (req, res) => {
 });
 
 // Endpoint to add an image url to an item by ID
-app.post('/marketitem/add-image-url', async (req, res) => {
+app.post('/marketitem/add-image-url', checkAuth, async (req, res) => {
     const { id, image_url } = req.body.payload;
 
     // Validate input
@@ -304,7 +304,7 @@ app.post('/marketitem/add-image-url', async (req, res) => {
 // REAL ESTATE SECTION //
 
 // Endpoint to get all real estate items
-app.get('/realestate', async (req, res) => {
+app.get('/realestate', checkAuth, async (req, res) => {
     const query = 'SELECT * FROM immoitems';
 
     try {
@@ -320,7 +320,7 @@ app.get('/realestate', async (req, res) => {
 });
 
 // Endpoint to get a specific real estate item by ID
-app.get('/realestate/id', async (req, res) => {
+app.get('/realestate/id', checkAuth, async (req, res) => {
     const { id } = req.query;
     const text = 'SELECT * FROM immoitems WHERE id = $1';
 
@@ -339,7 +339,7 @@ app.get('/realestate/id', async (req, res) => {
 });
 
 // Endpoint to add a new real estate item
-app.post('/add-realestate', async (req, res) => {
+app.post('/add-realestate', checkAuth, async (req, res) => {
     const { owner, name, address, title, description, price, type, size, rooms, selltype, image_id} = req.body.payload;
 
     // Validate input
@@ -360,7 +360,7 @@ app.post('/add-realestate', async (req, res) => {
 });
 
 // Endpoint to delete a real estate item by ID
-app.delete('/delete-realestate/:id', async (req, res) => {
+app.delete('/delete-realestate/:id', checkAuth, async (req, res) => {
     const { id } = req.params;
 
     // Validate input
@@ -387,7 +387,7 @@ app.delete('/delete-realestate/:id', async (req, res) => {
 });
 
 // Endpoint to update a real estate item by ID
-app.post('/update-realestate', async (req, res) => {
+app.post('/update-realestate', checkAuth, async (req, res) => {
     const { title, description, price, type, selltype, size, rooms, id} = req.body.payload;
 
     // Validate input
@@ -422,7 +422,7 @@ app.post('/update-realestate', async (req, res) => {
 });
 
 // Endpoint to mark a real estate item as sold by ID
-app.post('/realestate/markassold', async (req, res) => {
+app.post('/realestate/markassold', checkAuth, async (req, res) => {
     const id = req.body.id;
 
     // Validate input
@@ -456,7 +456,7 @@ app.post('/realestate/markassold', async (req, res) => {
 });
 
 // Endpoint to add an image url to a real estate item by ID
-app.post('/realestate/add-image-url', async (req, res) => {
+app.post('/realestate/add-image-url', checkAuth, async (req, res) => {
     const { id, image_url } = req.body.payload;
 
     // Validate input
@@ -491,7 +491,7 @@ app.post('/realestate/add-image-url', async (req, res) => {
 // VEHICLE SECTION //
 
 // Endpoint to get all vehicles
-app.get('/vehicles', async (req, res) => {
+app.get('/vehicles', checkAuth, async (req, res) => {
     const query = 'SELECT * FROM vehicles';
 
     try {
@@ -507,7 +507,7 @@ app.get('/vehicles', async (req, res) => {
 });
 
 // Endpoint to get a specific vehicle by ID
-app.get('/vehicle/id', async (req, res) => {
+app.get('/vehicle/id', checkAuth, async (req, res) => {
     const { id } = req.query;
     const text = 'SELECT * FROM vehicles WHERE id = $1';
 
@@ -526,7 +526,7 @@ app.get('/vehicle/id', async (req, res) => {
 });
 
 // Endpoint to add a new vehicle
-app.post('/add-vehicle', async (req, res) => {
+app.post('/add-vehicle', checkAuth, async (req, res) => {
     const { owner, name, address, title, description, price, brand, mileage, initialapproval, image_id} = req.body.payload;
 
     // Validate input
@@ -547,7 +547,7 @@ app.post('/add-vehicle', async (req, res) => {
 });
 
 // Endpoint to delete a vehicle by ID
-app.delete('/delete-vehicle/:id', async (req, res) => {
+app.delete('/delete-vehicle/:id', checkAuth, async (req, res) => {
     const { id } = req.params;
 
     // Validate input
@@ -574,7 +574,7 @@ app.delete('/delete-vehicle/:id', async (req, res) => {
 });
 
 // Endpoint to update a vehicle item by ID
-app.post('/update-vehicle', async (req, res) => {
+app.post('/update-vehicle', checkAuth, async (req, res) => {
     const { title, description, price, brand, mileage, initialapproval, id} = req.body.payload;
 
     // Validate input
@@ -609,7 +609,7 @@ app.post('/update-vehicle', async (req, res) => {
 });
 
 // Endpoint to mark a vehicle as sold by ID
-app.post('/vehicle/markassold', async (req, res) => {
+app.post('/vehicle/markassold', checkAuth, async (req, res) => {
     const id = req.body.id;
 
     // Validate input
@@ -643,7 +643,7 @@ app.post('/vehicle/markassold', async (req, res) => {
 });
 
 // Endpoint to add an image url to a vehicle by ID
-app.post('/vehicle/add-image-url', async (req, res) => {
+app.post('/vehicle/add-image-url', checkAuth, async (req, res) => {
     const { id, image_url } = req.body.payload;
 
     // Validate input
@@ -679,7 +679,7 @@ app.post('/vehicle/add-image-url', async (req, res) => {
 // CHAT SECTION //
 
 // Endpoint to create a new chat
-app.post('/add-chat', async (req, res) => {
+app.post('/add-chat', checkAuth, async (req, res) => {
     const { sender, title, recipient } = req.body.payload;
 
     if (!sender || !title || !recipient) {
@@ -699,7 +699,7 @@ app.post('/add-chat', async (req, res) => {
 });
 
 // Endpoint to get all chats of an user
-app.get('/chats/:recipient', async (req, res) => {
+app.get('/chats/:recipient', checkAuth, async (req, res) => {
     const { recipient } = req.params;
 
     // Validate input
@@ -720,7 +720,7 @@ app.get('/chats/:recipient', async (req, res) => {
 });
 
 // Endpoint to get a chat by ID
-app.get('/chat/id', async (req, res) => {
+app.get('/chat/id', checkAuth, async (req, res) => {
     const { id } = req.query;
     const text = 'SELECT * FROM chats WHERE id = $1';
 
@@ -739,7 +739,7 @@ app.get('/chat/id', async (req, res) => {
 });
 
 // Endpoint to get messages of a chat by ID
-app.get('/messages/chatId', async (req, res) => {
+app.get('/messages/chatId', checkAuth, async (req, res) => {
     const { id } = req.query;
     const text = 'SELECT * FROM messages WHERE chat_id = $1 ORDER BY time ASC';
 
@@ -758,7 +758,7 @@ app.get('/messages/chatId', async (req, res) => {
 });
 
 // Endpoint to delete a chat by ID
-app.delete('/delete-chat/:id', async (req, res) => {
+app.delete('/delete-chat/:id', checkAuth, async (req, res) => {
 const { id } = req.params; 
 
 const deleteMessagesText = 'DELETE FROM messages WHERE chat_id = $1'; 
@@ -788,7 +788,7 @@ try {
 });
 
 // Endpoint to create a new message
-app.post('/add-message', async (req, res) => {
+app.post('/add-message', checkAuth, async (req, res) => {
     const { chat_id, sender, recipient, text, time } = req.body.payload;
 
     // Validate input

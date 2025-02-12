@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -11,27 +11,34 @@ export class ChatService {
   
   constructor(private http: HttpClient) { }
 
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
   getUserChats(recipient: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/chats/${recipient}`);
+    return this.http.get(`${this.apiUrl}/chats/${recipient}`, { headers: this.getHeaders() });
   }
 
   getChatById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/chat/id?id=${id}`);
+    return this.http.get<any>(`${this.apiUrl}/chat/id?id=${id}`, { headers: this.getHeaders() });
   }
 
   addChat(chat: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/add-chat`, { payload: chat });
+    return this.http.post(`${this.apiUrl}/add-chat`, { payload: chat }, { headers: this.getHeaders() });
   }
 
   deleteChatById(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/delete-chat/${id}`);
+    return this.http.delete(`${this.apiUrl}/delete-chat/${id}`, { headers: this.getHeaders() });
   }
 
   getMessagesById(chatId: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/messages/chatId?id=${chatId}`);
+    return this.http.get<any>(`${this.apiUrl}/messages/chatId?id=${chatId}`, { headers: this.getHeaders() });
   }
 
   addMessage(message: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/add-message`, { payload: message });
+    return this.http.post(`${this.apiUrl}/add-message`, { payload: message }, { headers: this.getHeaders() });
   }
 }

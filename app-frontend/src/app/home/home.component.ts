@@ -138,7 +138,6 @@ export class HomeComponent {
         const response = await firstValueFrom(this.imageService.downloadImage(imageId));
         if (response.success) {
             imageUrl = await this.setDirectDownloadFalse(response.downloadURL);
-            console.log('Image URL:', imageUrl);
             return imageUrl;
         } else {
             console.error('Failed to retrieve image URL:', response);
@@ -169,7 +168,6 @@ export class HomeComponent {
               await this.addVehicleUrl(item.id, url);
         } catch (error) {
             console.error(`Error processing image URL for item ${item.id}:`, error);
-            item.imageUrl = 'assets/real-estate.png';
         }
     }
   }
