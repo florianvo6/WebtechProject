@@ -73,6 +73,9 @@
                             <label for="mileageInput">Mileage</label>
                         </div>
                         <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" style="background-color: #7C8399; color: white; border: none;" type="submit" [disabled]="!registrationForm.valid">Add Vehicle</button>
+                        <div class="loading-overlay" *ngIf="isLoading">
+                            <img src="assets/loading.gif" alt="Loading..." />
+                        </div>
                         <hr class="mt-4 mb-2">
                         <small class="text-body-secondary">You can check your own items by visiting your profile. <a href="#" (click)="goToProfil(); $event.preventDefault();" class="custom-link">here</a></small>
                     </form>

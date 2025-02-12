@@ -23,6 +23,7 @@ export class AddMarketplaceComponent {
   jobId: number | null = null;
   selectedFile: File | null = null;
   alert: Alert | null = null;
+  isLoading: boolean = false;
 
   constructor(private imageService: ImageService, private http: HttpClient, private router: Router, private alertService: AlertService, private marketitemService: MarketitemService) { }
  
@@ -61,8 +62,10 @@ export class AddMarketplaceComponent {
         (response: any) => {
             if (response && response.message) {
                 this.alertService.success('Item added successfully!');
+                this.alertService.keepAfterRouteChange();
             } else {
                 this.alertService.error('Failed to add item. Please try again.');
+                this.alertService.keepAfterRouteChange();
             }
         },
         (error) => {
@@ -73,6 +76,7 @@ export class AddMarketplaceComponent {
   }
 
   async onUpload(): Promise<void> {
+    this.isLoading = true;
     if (this.selectedFile) {
         try {
             const response = await firstValueFrom(this.imageService.uploadImage(this.selectedFile));
@@ -110,6 +114,7 @@ async retrieveImageData(): Promise<void> {
                   if (finishedJobData) {
                     this.marketItem.imageId = finishedJobData.fileID;
                     await this.addItem();
+                    this.isLoading = false;
 
                     this.marketItem = createMarketItem();
                     const inputElement = document.getElementById('imageInput') as HTMLInputElement;
@@ -117,6 +122,7 @@ async retrieveImageData(): Promise<void> {
                     if (inputElement) {
                       inputElement.value = '';
                     }
+                    this.goToHome();
                     return;
                   } else {
                       console.warn('Finished job data is null. Retrying...');
@@ -138,5 +144,9 @@ async retrieveImageData(): Promise<void> {
 
   goToProfil() {
     this.router.navigate(['/profile']);
+  }
+
+  goToHome() {
+    this.router.navigate(['/home']);
   }
 }

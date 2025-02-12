@@ -24,6 +24,7 @@ export class AddVehicleComponent {
   jobId: number | null = null;
   selectedFile: File | null = null;
   alert: Alert | null = null;
+  isLoading: boolean = false;
 
   constructor(private imageService: ImageService, private http: HttpClient, private router: Router, private alertService: AlertService, private vehicleService: VehicleService) { }
  
@@ -63,8 +64,10 @@ export class AddVehicleComponent {
       (response: any) => {
           if (response && response.message) {
               this.alertService.success('Vehicle added successfully!');
+              this.alertService.keepAfterRouteChange();
           } else {
               this.alertService.error('Failed to add vehicle. Please try again.');
+              this.alertService.keepAfterRouteChange();
           }
       },
       (error) => {
@@ -75,6 +78,7 @@ export class AddVehicleComponent {
   }
  
   async onUpload(): Promise<void> {
+    this.isLoading = true;
     if (this.selectedFile) {
         try {
             const response = await firstValueFrom(this.imageService.uploadImage(this.selectedFile));
@@ -112,6 +116,7 @@ export class AddVehicleComponent {
                     if (finishedJobData) {
                         this.vehicleItem.imageId = finishedJobData.fileID.toString();
                         await this.addVehicle();
+                        this.isLoading = false;
 
                         this.vehicleItem = Create();
                         const inputElement = document.getElementById('imageInput') as HTMLInputElement;
@@ -119,6 +124,7 @@ export class AddVehicleComponent {
                         if (inputElement) {
                             inputElement.value = '';
                         }
+                        this.goToHome();
                         return;
                     } else {
                         console.warn('Finished job data is null. Retrying...');
@@ -140,5 +146,9 @@ export class AddVehicleComponent {
 
   goToProfil() {
     this.router.navigate(['/profile']);
+  }
+
+  goToHome() {
+    this.router.navigate(['/home']);
   }
 }
