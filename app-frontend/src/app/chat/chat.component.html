@@ -5,7 +5,7 @@
 <div class="modal-container w-50">
     <br/>
     <h1 class="pb-2 border-bottom text-white">Chat Overview</h1>
-    <div *ngIf="data">
+    <div *ngIf="data && data.length > 0; else noData">
         <div class="py-5 px-5">
             <div *ngFor="let chat of data" (click)="navigateToDetailPage(chat.id)" class="hover-effect">
                 <div class="card shadow-sm mb-2 hover-effect">
@@ -23,6 +23,11 @@
             </div>
         </div>
     </div>
+    <ng-template #noData>
+        <div class="text-center transpar py-3">
+            <p>No chats available! Find a product and start chatting with a seller.</p>
+        </div>
+    </ng-template>
 </div>
 
 

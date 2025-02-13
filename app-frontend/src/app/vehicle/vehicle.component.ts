@@ -42,27 +42,38 @@ export class VehicleComponent {
               reject(error);
           }
       );
-  });
-}
+    });
+  }
 
-  async filterData (brand: string, initialapproval: string) {
+  async filterData (brand: string, initialapproval: string, minPrice: string, maxPrice: string) {
     await this.getVehicles();
 
     try {
-      const initialApprovalNumber = initialapproval ? +initialapproval : null;
+        const initialApprovalNumber = initialapproval ? +initialapproval : null;
+        let filteredData = this.data;
 
-      if (brand && !initialApprovalNumber) {
-        this.data = this.data.filter(item => brand === item.brand);
-      }
-      else if (!brand && initialApprovalNumber) {
-        this.data = this.data.filter(item => initialApprovalNumber === item.initialapproval);
-      }
-      else if (brand && initialApprovalNumber) {
-        this.data = this.data.filter(item => brand === item.brand && initialApprovalNumber === item.initialapproval);
-      }
-    }
-    catch (error) {
-      console.error(error);
+        if (brand) {
+            filteredData = filteredData.filter(item => brand === item.brand);
+        }
+
+        if (initialApprovalNumber) {
+            filteredData = filteredData.filter(item => initialApprovalNumber === item.initialapproval);
+        }
+
+        const minPriceValue = minPrice ? parseFloat(minPrice) : null;
+        const maxPriceValue = maxPrice ? parseFloat(maxPrice) : null;
+
+        if (minPriceValue !== null && !isNaN(minPriceValue)) {
+            filteredData = filteredData.filter(item => item.price >= minPriceValue);
+        }
+
+        if (maxPriceValue !== null && !isNaN(maxPriceValue)) {
+          filteredData = filteredData.filter(item => item.price <= maxPriceValue);
+        }
+
+        this.data = filteredData;
+    } catch (error) {
+        console.error(error);
     }
   }
 
@@ -71,13 +82,20 @@ export class VehicleComponent {
     const normalizedSearchTerm = this.searchTerm.trim().toLowerCase();
 
         this.data = this.data.filter(item =>
-            item.title.toLowerCase().includes(normalizedSearchTerm)
+            item.title.toLowerCase().includes(normalizedSearchTerm) ||
+            item.description.toLowerCase().includes(normalizedSearchTerm) ||
+            item.address.toLowerCase().includes(normalizedSearchTerm)
         );
   }
 
-  async resetData() {
+  async resetData(brandSelect: HTMLSelectElement, initialapprovalSelect: HTMLSelectElement, minPriceInput: HTMLInputElement, maxPriceInput: HTMLInputElement) {
     await this.getVehicles();
-  }
+
+    minPriceInput.value = '';
+    maxPriceInput.value = '';
+    brandSelect.selectedIndex = 0;
+    initialapprovalSelect.selectedIndex = 0;
+}
 
   public navigateToAddPage() {
     this.router.navigate(['/add-vehicle']);

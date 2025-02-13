@@ -45,22 +45,34 @@ export class RealEstateComponent {
     });
   }
 
-  async filterData (type: string, selltype: string) {
+  async filterData (type: string, selltype: string, minPrice: string, maxPrice: string) {
     await this.getRealEstate();
 
     try {
-      if (type && !selltype) {
-        this.data = this.data.filter(item => type === item.type);
-      }
-      else if (!type && selltype) {
-        this.data = this.data.filter(item => selltype === item.handover);
-      }
-      else if (type && selltype) {
-        this.data = this.data.filter(item => type === item.type && selltype === item.selltype);
-      }
-    }
-    catch (error) {
-      console.error(error);
+        let filteredData = this.data;
+
+        if (type) {
+            filteredData = filteredData.filter(item => type === item.type);
+        }
+
+        if (selltype) {
+            filteredData = filteredData.filter(item => selltype === item.selltype);
+        }
+
+        const minPriceValue = minPrice ? parseFloat(minPrice) : null;
+        const maxPriceValue = maxPrice ? parseFloat(maxPrice) : null;
+
+        if (minPriceValue !== null && !isNaN(minPriceValue)) {
+            filteredData = filteredData.filter(item => item.price >= minPriceValue);
+        }
+
+        if (maxPriceValue !== null && !isNaN(maxPriceValue)) {
+          filteredData = filteredData.filter(item => item.price <= maxPriceValue);
+        }
+
+        this.data = filteredData;
+    } catch (error) {
+        console.error(error);
     }
   }
 
@@ -69,12 +81,19 @@ export class RealEstateComponent {
     const normalizedSearchTerm = this.searchTerm.trim().toLowerCase();
 
         this.data = this.data.filter(item =>
-            item.title.toLowerCase().includes(normalizedSearchTerm)
+            item.title.toLowerCase().includes(normalizedSearchTerm) ||
+            item.description.toLowerCase().includes(normalizedSearchTerm) ||
+            item.address.toLowerCase().includes(normalizedSearchTerm)
         );
   }
 
-  async resetData() {
+  async resetData(typeSelect: HTMLSelectElement, selltypeSelect: HTMLSelectElement, minPriceInput: HTMLInputElement, maxPriceInput: HTMLInputElement) {
     await this.getRealEstate();
+
+    minPriceInput.value = '';
+    maxPriceInput.value = '';
+    typeSelect.selectedIndex = 0;
+    selltypeSelect.selectedIndex = 0;
   }
 
   public navigateToAddPage() {

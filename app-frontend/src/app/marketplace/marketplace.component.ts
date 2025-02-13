@@ -45,37 +45,56 @@ export class MarketplaceComponent {
     });
   }
 
-  async filterData (condition: string, handover: string) {
+  async filterData (condition: string, handover: string, minPrice: string, maxPrice: string) {
     await this.getProducts();
 
     try {
-      if (condition && !handover) {
-        this.data = this.data.filter(item => condition === item.condition);
-      }
-      else if (!condition && handover) {
-        this.data = this.data.filter(item => handover === item.handover);
-      }
-      else if (condition && handover) {
-        this.data = this.data.filter(item => condition === item.condition && handover === item.handover);
-      }
+        let filteredData = this.data;
+
+        if (condition) {
+            filteredData = filteredData.filter(item => condition === item.condition);
+        }
+
+        if (handover) {
+            filteredData = filteredData.filter(item => handover === item.handover);
+        }
+
+        const minPriceValue = minPrice ? parseFloat(minPrice) : null;
+        const maxPriceValue = maxPrice ? parseFloat(maxPrice) : null;
+
+        if (minPriceValue !== null && !isNaN(minPriceValue)) {
+            filteredData = filteredData.filter(item => item.price >= minPriceValue);
+        }
+
+        if (maxPriceValue !== null && !isNaN(maxPriceValue)) {
+          filteredData = filteredData.filter(item => item.price <= maxPriceValue);
+        }
+
+        this.data = filteredData;
+    } catch (error) {
+        console.error(error);
     }
-    catch (error) {
-      console.error(error);
-    }
-  }
+}
 
   async searchData () {
     await this.getProducts();
     const normalizedSearchTerm = this.searchTerm.trim().toLowerCase();
 
       this.data = this.data.filter(item =>
-          item.title.toLowerCase().includes(normalizedSearchTerm)
+          item.title.toLowerCase().includes(normalizedSearchTerm) ||
+          item.description.toLowerCase().includes(normalizedSearchTerm) ||
+          item.address.toLowerCase().includes(normalizedSearchTerm)
       );
   }
 
-  async resetData() {
+  async resetData(minPriceInput: HTMLInputElement, maxPriceInput: HTMLInputElement, conditionSelect: HTMLSelectElement, handoverSelect: HTMLSelectElement) {
     await this.getProducts();
-  }
+
+    minPriceInput.value = '';
+    maxPriceInput.value = '';
+    conditionSelect.selectedIndex = 0;
+    handoverSelect.selectedIndex = 0;
+}
 
   public navigateToAddPage() {
     this.router.navigate(['/add-market-item']);

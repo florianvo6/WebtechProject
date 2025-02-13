@@ -9,13 +9,15 @@
         <p class="lead text-white">Search our market for real estate and find your new home today!</p>
       </main>
       <div class="inner d-flex justify-content-center align-items-center mt-3">
-        <div class="col-md-2">
-          <input type="text" class="form-control me-3" id="searchInput" placeholder="Search" [(ngModel)]="searchTerm" aria-label="Search" (input)="searchData()" />
+        <div class="col-md-2" style="width: 335px">
+          <input type="text" class="form-control me-1 search-field" id="searchInput" placeholder="Search for a product, description or address" [(ngModel)]="searchTerm" aria-label="Search" (input)="searchData()" />
         </div>
         <button type="button" class="btn btn-outline-light my-3 my-sm-0 ms-2" (click)="navigateToAddPage()">Add New</button>
       </div>
       <br />
       <div class="inner d-flex justify-content-center align-items-center">
+        <input #minPrice type="text" value="" class="form-control me-1 price-field" id="minPrice" placeholder="MIN €" aria-label="Min Price"/>
+        <input #maxPrice type="text" value="" class="form-control me-1 price-field" id="maxPrice" placeholder="MAX €" aria-label="Max Price"/>
         <select #type class="btn btn-outline-light me-1">
           <option value="" selected disabled hidden>filter a type</option>
           <option value="House">House</option>
@@ -28,8 +30,8 @@
           <option value="Rent">Rent</option>
           <option value="">Remove Filter</option>
         </select>
-        <button class="btn btn-light me-1 ms-1" (click)="filterData(type.value, selltype.value)">Filter</button>
-        <button class="btn btn-light" (click)="resetData()">Reset</button>
+        <button class="btn btn-light me-1 ms-1" (click)="filterData(type.value, selltype.value, minPrice.value, maxPrice.value)">Filter</button>
+        <button class="btn btn-light" (click)="resetData(type, selltype, minPrice, maxPrice)">Reset</button>
       </div>
     </div>
     <div *ngIf="data && data.length > 0; else noData">

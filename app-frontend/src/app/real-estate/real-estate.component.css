@@ -18,3 +18,11 @@
 .transpar {
     color:#424242;
 }
+
+.search-field {
+    width: 335px;
+}
+
+.price-field {
+    width: 100px;
+}
