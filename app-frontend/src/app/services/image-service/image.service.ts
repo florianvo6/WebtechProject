@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ImageService {
-  private apiUrl = 'https://marketmingle.px.media/api/v1/files';
+  private apiUrl = 'https://mingle.px.media/api/v1/files';
 
   constructor(private http: HttpClient) { }
 
@@ -18,16 +18,16 @@ export class ImageService {
     formData.append('description', 'New Photo');
 
     const headers = new HttpHeaders({
-      'Authorization': 'Bearer 03sjzK2rZLbtQvUrfTTyh5fs7BxEktgRx21APcNIH1jxa3anmutCQrEXMX2y9mLi',
+      'Authorization': 'Bearer nDnA3zVgRASeWxZiwKE7pFjchI2qiCkOREHKprcYi6Q3caMnbM4IfY61B1SaAeZF',
     });
 
     return this.http.post(this.apiUrl, formData, { headers });
   }
 
   getJobDetails(jobId: string): Observable<any> {
-    const url = `https://marketmingle.px.media/api/v1/jobs/${jobId}`;
+    const url = `https://mingle.px.media/api/v1/jobs/${jobId}`;
     const headers = new HttpHeaders({
-        'Authorization': 'Bearer 03sjzK2rZLbtQvUrfTTyh5fs7BxEktgRx21APcNIH1jxa3anmutCQrEXMX2y9mLi',
+        'Authorization': 'Bearer nDnA3zVgRASeWxZiwKE7pFjchI2qiCkOREHKprcYi6Q3caMnbM4IfY61B1SaAeZF',
     });
 
     const params = new HttpParams().set('responseFields', JSON.stringify(['id', 'jobData', 'progress', 'isFinished']));
@@ -36,9 +36,9 @@ export class ImageService {
   }
 
   downloadImage(fileId: string): Observable<any> {
-    const url = `https://marketmingle.px.media/api/v1/files/${fileId}/convert`;
+    const url = `https://mingle.px.media/api/v1/files/${fileId}/convert`;
     const headers = new HttpHeaders({
-        'Authorization': 'Bearer 03sjzK2rZLbtQvUrfTTyh5fs7BxEktgRx21APcNIH1jxa3anmutCQrEXMX2y9mLi',
+        'Authorization': 'Bearer nDnA3zVgRASeWxZiwKE7pFjchI2qiCkOREHKprcYi6Q3caMnbM4IfY61B1SaAeZF',
     });
 
     const params = new HttpParams()

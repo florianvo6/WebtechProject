@@ -60,6 +60,12 @@
     cursor: pointer;
 }
 
+.edit-icon:hover, .delete-icon:hover {
+    background-color: #a0a8c347;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
 .sold-icon {
     position: absolute;
     bottom: 10px;

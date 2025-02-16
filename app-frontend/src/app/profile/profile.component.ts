@@ -39,9 +39,27 @@ export class ProfileComponent {
       await this.getUserData(this.currentUser);
     }
 
-    await this.getRealEstate();
-    await this.getVehicles();
-    await this.getProducts();
+    await this.fetchData();
+  }
+
+  async fetchData() {
+    try {
+        await this.getRealEstate();
+    } catch (error) {
+        console.error("Error fetching real estate:", error);
+    }
+
+    try {
+        await this.getVehicles();
+    } catch (error) {
+        console.error("Error fetching vehicles:", error);
+    }
+
+    try {
+        await this.getProducts();
+    } catch (error) {
+        console.error("Error fetching products:", error);
+    }
   }
 
   async getUserData(currentUser: string): Promise<void> {

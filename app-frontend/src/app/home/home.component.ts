@@ -24,12 +24,30 @@ export class HomeComponent {
   constructor(private router: Router, private alertService: AlertService, private marketitemService: MarketitemService, private realestateService: RealestateService, private vehicleService: VehicleService ,private imageService: ImageService) {}
 
   async ngOnInit() {
-    await this.getProducts();
-    await this.getRealEstate();
-    await this.getVehicles();
-    await this.saveImgUrl(this.marketItemData, "market");
-    await this.saveImgUrl(this.realestateItemData, "realestate");
-    await this.saveImgUrl(this.vehicleData, "vehicle");
+    await this.fetchData();
+  }
+
+  async fetchData() {
+    try {
+        await this.getProducts();
+        await this.saveImgUrl(this.marketItemData, "market");
+    } catch (error) {
+        console.error("Error fetching products:", error);
+    }
+
+    try {
+        await this.getRealEstate();
+        await this.saveImgUrl(this.realestateItemData, "realestate");
+    } catch (error) {
+        console.error("Error fetching real estate:", error);
+    }
+
+    try {
+        await this.getVehicles();
+        await this.saveImgUrl(this.vehicleData, "vehicle");
+    } catch (error) {
+        console.error("Error fetching vehicles:", error);
+    }
   }
 
   getProducts(): Promise<void> {

@@ -310,12 +310,12 @@ app.get('/realestate', checkAuth, async (req, res) => {
     try {
         const results = await pool.query(query);
         if (results.rows.length === 0) {
-            return res.status(404).send("No items found.");
+            return res.status(404).send({ message: 'No items found.' });
         }
         return res.status(200).json(results.rows);
     } catch (error) {
         console.error(error);
-        return res.status(500).send("Error retrieving items.");
+        return res.status(500).send({ message: 'Error retrieving items.' });
     }
 });
 
@@ -329,12 +329,12 @@ app.get('/realestate/id', checkAuth, async (req, res) => {
     try {
         const results = await pool.query(text, values);
         if (results.rows.length === 0) {
-            return res.status(404).send("Item not found.");
+            return res.status(404).send({ messge: 'Item not found.' });
         }
         return res.status(200).json(results.rows[0]);
     } catch (error) {
         console.error(error);
-        return res.status(500).send("Error retrieving item.");
+        return res.status(500).send({ messge: 'Error retrieving item.' });
     }
 });
 
