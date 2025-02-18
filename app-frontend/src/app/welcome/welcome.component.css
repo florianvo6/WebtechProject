@@ -1,0 +1,16 @@
+.navbar-logo img {
+    width: auto;
+    height: 70px;
+}
+
+.navbar {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.modal-container {
+    background-color: #585d6d90;
+    border-radius: 15px;
+    margin: 25px auto;
+    width: 1500px;
+    text-align: center;
+}

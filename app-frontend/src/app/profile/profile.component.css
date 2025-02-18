@@ -1,0 +1,87 @@
+.modal-container {
+    background-color: #585d6d90;
+    border-radius: 15px;
+    margin: 25px auto;
+    width: 1500px;
+    text-align: center;
+}
+
+.custom-modal {
+    background-color: white;
+    border-radius: 0.9rem;
+    border: 0.3px solid #7d859f;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 45px;
+    margin-bottom: 45px;
+    max-width: 900px;
+}
+
+.modal-header {
+    padding-bottom: 15px;
+}
+
+.modal-body {
+    padding: 15px;
+}
+
+.bor {
+    border-top: 1px solid #dee2e6;
+    padding-top: 15px;
+}
+
+.transpar {
+    color:#a0a0a0a1;
+}
+
+.hover-effect {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-effect:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.edit-icon {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+ 
+.delete-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.edit-icon:hover, .delete-icon:hover {
+    background-color: #a0a8c347;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.sold-icon {
+    position: absolute;
+    bottom: 10px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.custom-btn {
+    background-color: white;
+    color: #7C8399;
+    border-color: #7C8399;
+  }
+ 
+  .custom-btn:hover {
+    background-color: #7C8399;
+    border-color: #7C8399;
+    color: white;
+}

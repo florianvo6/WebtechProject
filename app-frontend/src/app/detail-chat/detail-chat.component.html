@@ -1,0 +1,36 @@
+<app-navbar></app-navbar>
+<div style="width: 950px;" class="mx-auto">
+    <app-alert></app-alert>
+</div>
+<div class="modal-container w-50">
+    <h1 class="pb-2 pt-4 border-bottom text-white">Chat Details</h1>
+    <div class="padding-container">
+        <div class="header-container rounded-3 mb-3 p-1 border-bottom">
+            <p class="card-text text-start">
+            <img src="assets/profil-black.png" alt="Seller Icon" class="icon" />
+            {{ getRecipient() }}
+            </p>
+            <p class="card-text text-end">
+            <img src="assets/message-black.png" alt="Seller Icon" class="icon" />
+            {{ chat.title }}
+            </p>
+        </div>
+    <div class="chat-container rounded-3">
+        <div *ngFor="let message of messages" [ngClass]="{'message-sender': message.sender === chatUser , 'message-recipient': message.sender !== chatUser }">
+            <div class="message-text">{{ message.text }}</div>
+            <div class="message-time">{{ message.time | date:'shortTime' }}</div>
+        </div>
+    </div>
+    <div class="input-container">
+        <input type="text" [(ngModel)]="newMessage" placeholder="Type your message..." class="form-control" />
+        <div class="row">
+            <div class="col text-start">
+                <button class="w-50 mb-2 btn btn-lg rounded-3 btn-light mt-3 btn-send" (click)="sendMessage()">Send Message</button>
+            </div>
+            <div class="col text-end">
+                <button class="w-50 mb-2 btn btn-lg rounded-3 btn-light mt-3 btn-delete" (click)="deleteChat()">Delete Chat</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

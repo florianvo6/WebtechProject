@@ -1,0 +1,57 @@
+<nav class="navbar" style="background-color: #585D6D;">
+    <div class="navbar-logo">
+      <img src="assets\logo.png" alt="Logo" />
+    </div>
+    <div class="navbar-buttons">
+        <a href="#" (click)="goToLogin(); $event.preventDefault();" class="btn btn-light me-3">Login</a>
+        <a href="#" (click)="goToRegister(); $event.preventDefault();" class="btn btn-light me-4">Register</a>
+    </div>
+  </nav>
+
+<div style="width: 950px;" class="mx-auto">
+<app-alert></app-alert>
+</div>
+
+<div class="modal-container w-50">
+    <br/>
+    <h1 class="pb-2 border-bottom text-white">Create a new account</h1>
+    
+    <div class="modal modal-sheet position-static d-block p-4 py-md-3" tabindex="-1" role="dialog" id="modalSignin">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-4 shadow">
+            <div class="modal-header p-5 pb-4 border-bottom-0">
+            <h1 class="fw-bold mb-0 fs-2 text-center">Register</h1>
+            </div>
+    
+            <div class="modal-body p-5 pt-0">
+            <form (ngSubmit)="register()" #registrationForm="ngForm">
+                <div class="form-floating mb-3">
+                <input type="text" class="form-control rounded-3" id="userInput" placeholder="MaxMuster99" [(ngModel)]="user" name="user" required>
+                <label for="floatingInput">Username</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control rounded-3" id="mailInput" placeholder="max.muster@example.com" [(ngModel)]="mail" name="mail" required>
+                    <label for="floatingInput">E-Mail</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control rounded-3" id="nameInput" placeholder="Max" [(ngModel)]="name" name="name" required>
+                    <label for="floatingInput">First name</label>
+                </div>
+                <div class="form-floating mb-3">
+                <input type="password" class="form-control rounded-3" id="passInput" placeholder="Password" [(ngModel)]="pass" name="pass" required>
+                <label for="floatingPassword">Password</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control rounded-3" id="addressInput" placeholder="Examplestreet 99, 9900 Example" [(ngModel)]="address" name="address" required>
+                    <label for="floatingInput">Address</label>
+                </div>
+                <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" style="background-color: #7C8399; color: white; border: none;" type="submit" [disabled]="!registrationForm.valid">Register</button>
+                <hr class="mt-4 mb-2">
+                <small class="text-body-secondary">If you have successfully registered, please log in to your account. You can click <a href="#" (click)="goToLogin(); $event.preventDefault();" class="custom-link">here</a> to get to the login.</small>
+            </form>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+

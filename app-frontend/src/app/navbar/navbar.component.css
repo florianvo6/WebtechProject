@@ -1,0 +1,12 @@
+.navbar-logo img {
+    width: auto;
+    height: 70px;
+}
+
+.navbar {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.navbar-buttons {
+    margin-left: auto;
+}

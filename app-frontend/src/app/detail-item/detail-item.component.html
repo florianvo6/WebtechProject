@@ -1,0 +1,54 @@
+<app-navbar></app-navbar>
+<div style="width: 965px;" class="mx-auto">
+    <app-alert></app-alert>
+</div>
+<div class="modal-container w-50">
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <br />
+        <main role="main" class="inner cover">
+          <h1 class="pb-2 border-bottom text-white">Product Details</h1>
+        </main>
+    </div>
+    <div class="py-5 px-5">
+        <div class="card shadow-sm">
+            <div class="row g-0">
+                <div class="col-md-6 d-flex justify-content-center align-items-top">
+                    <img class="img-fluid p-4" [src]="imageUrl" alt="Product Image" style="max-width: 100%; max-height: 450px" />
+                </div>
+                <div class="col-md-6 text-start">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h4 class="card-title border-bottom mt-2">{{ item.title }}</h4>
+                        <p class="card-text mt-2">
+                            <img src="assets/user.png" alt="Seller Icon" class="icon" />
+                            <strong>Seller:</strong> {{ item.name }}
+                        </p>
+                        <p class="card-text">
+                            <img src="assets/location.png" alt="Address Icon" class="icon" />
+                            <strong>Address:</strong> {{ item.address }}
+                        </p>
+                        <p class="card-text border-bottom pb-2">
+                            <img src="assets/price.png" alt="Price Icon" class="icon" />
+                            <strong>Price:</strong> $ {{ item.price }}
+                        </p>
+                        <h5 class="mt-2">Description</h5>
+                        <p class="card-text border-bottom pb-2"> {{ item.description }} </p>
+                        <h5 class="mt-2">Details</h5>
+                        <p class="card-text">
+                            <img src="assets/condition.png" alt="Address Icon" class="icon" />
+                            <strong>Condition:</strong> {{ item.condition }}
+                        </p>
+                        <p class="card-text mb-4">
+                            <img src="assets/handover.png" alt="Price Icon" class="icon" />
+                            <strong>Handover:</strong> {{ item.handover }}
+                        </p>
+                        <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" style="background-color: #7C8399; color: white; border: none;" (click)="toggleMessageInput()">Send Request</button>
+                        <div *ngIf="showMessageInput">
+                            <input type="text" [(ngModel)]="messageText" placeholder="Type your message here..." class="form-control mb-2" />
+                            <button class="btn btn-primary" style="background-color: #7C8399; color: white; border: none;" (click)="sendMessage()">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

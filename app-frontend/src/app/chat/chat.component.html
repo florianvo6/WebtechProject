@@ -1,0 +1,33 @@
+<app-navbar></app-navbar>
+<div style="width: 950px;" class="mx-auto">
+    <app-alert></app-alert>
+</div>
+<div class="modal-container w-50">
+    <br/>
+    <h1 class="pb-2 border-bottom text-white">Chat Overview</h1>
+    <div *ngIf="data && data.length > 0; else noData">
+        <div class="py-5 px-5">
+            <div *ngFor="let chat of data" (click)="navigateToDetailPage(chat.id)" class="hover-effect">
+                <div class="card shadow-sm mb-2 hover-effect">
+                    <div class="col-md-6 text-start py-2 px-2 ms-2">
+                        <p class="card-text mt-2">
+                            <img src="assets/profil.png" alt="Seller Icon" class="icon" />
+                            <strong>User:</strong> {{ getRecipient(chat.sender) ? chat.recipient : chat.sender }}
+                        </p>
+                        <p class="card-text mt-2">
+                            <img src="assets/message.png" alt="Seller Icon" class="icon" />
+                            <strong>Request:</strong> {{ chat.title }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template #noData>
+        <div class="text-center transpar py-3">
+            <p>No chats available! Find a product and start chatting with a seller.</p>
+        </div>
+    </ng-template>
+</div>
+
+
